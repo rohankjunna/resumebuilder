@@ -645,6 +645,8 @@ function blankProj(){ return { name:'', tech:'', description:'' }; }
 let resume = blankResume();
 let currentView = 'build';
 let analyzeSource = 'saved';
+let resumeAccess = null;
+let resumeClaimed = false;
 
 /* ============================= AUTHENTICATION ============================= */
 async function authRequest(url, options = {}){
@@ -658,6 +660,8 @@ async function loadUser(){
     const data = await authRequest('/api/me');
     if(!data.user){ window.location.href = '/login'; return; }
     const email = data.user.email;
+    resumeAccess = data.resumeAccess || null;
+    resumeClaimed = Boolean(resumeAccess && (resumeAccess.resumeCount > 0 || resumeAccess.canCreate === false || resumeAccess.isAdmin));
     document.getElementById('accountEmail').textContent = email;
     document.getElementById('accountAvatar').textContent = email.charAt(0).toUpperCase();
     // wire up avatar dropdown
@@ -1012,12 +1016,30 @@ document.getElementById('resumeSelect').addEventListener('change', async e=>{
 });
 
 document.getElementById('saveResumeBtn').addEventListener('click', async ()=>{
+  if(!resumeClaimed){
+    try{
+      const claim = await authRequest('/api/resume/claim', { method:'POST', body:'{}' });
+      resumeAccess = claim.access;
+      resumeClaimed = true;
+    }catch(error){
+      if(error.message.includes('Upgrade') || error.message.includes('already used')){
+        window.location.href = '/plans?select=pro&checkout=1';
+        return;
+      }
+      toast(error.message);
+      return;
+    }
+  }
   resume.updatedAt = Date.now();
   const ok = await storeResume(resume);
   toast(ok ? 'Saved.' : 'Could not save — try again.');
   refreshResumeSelects();
 });
 document.getElementById('newResumeBtn').addEventListener('click', ()=>{
+  if(resumeClaimed && !(resumeAccess && (resumeAccess.isAdmin || resumeAccess.plan === 'pro' || resumeAccess.plan === 'pro-plus'))){
+    window.location.href = '/plans?select=pro&checkout=1';
+    return;
+  }
   resume = blankResume();
   loadFormFromResume();
   refreshResumeSelects();

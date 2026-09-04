@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Resume Templates | Dossier</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-page="templates">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <nav class="nav">
+    <a data-page="home" href="/">🏠 Dashboard</a>
+    <div class="nav-dropdown">
+      <button class="nav-drop-btn">🧰 Products &#9660;</button>
+      <div class="nav-drop-menu">
+        <a href="/builder"><span class="drop-icon">📄</span><span><strong>Resume Builder</strong><small>Build a job-winning resume</small></span></a>
+        <a href="/cv-builder"><span class="drop-icon">📋</span><span><strong>CV Builder</strong><small>Create a professional CV</small></span></a>
+        <a href="/cover-letter"><span class="drop-icon">✉️</span><span><strong>Cover Letter Builder</strong><small>Write a compelling cover letter</small></span></a>
+      </div>
+    </div>
+    <a data-page="templates" href="/templates">🎨 Templates</a>
+    <a data-page="plans" href="/plans">💳 Plans</a>
+    <a data-page="about" href="/about">💡 About us</a>
+    <a data-page="blog" href="/career-blog">📰 Career Blog</a>
+    <a data-page="contact" href="/contact">📬 Contact</a>
+  </nav>
+  <div class="auth-links"><a class="btn light" href="/login">Log in</a><a class="btn" href="/signup">Sign up</a></div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main class="templates-page">
+  <section class="templates-hero">
+    <span class="eyebrow">Free resume templates</span>
+    <h1>Find a format that feels like you.</h1>
+    <p>Explore 120 clean, editable layouts designed for real applications and easy ATS scanning.</p>
+    <div class="template-toolbar">
+      <div class="template-filters" aria-label="Filter templates">
+        <button class="filter active" data-template-filter="all">All templates</button>
+        <button class="filter" data-template-filter="classic">Classic</button>
+        <button class="filter" data-template-filter="modern">Modern</button>
+        <button class="filter" data-template-filter="creative">Creative</button>
+        <button class="filter" data-template-filter="minimal">Minimal</button>
+      </div>
+      <span class="template-count" id="templateCount">120 free templates</span>
+    </div>
+  </section>
+  <section class="template-grid" id="templateGrid" aria-live="polite"></section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

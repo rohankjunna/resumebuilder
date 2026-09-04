@@ -70,7 +70,7 @@
       <a class="btn light" href="/signup">Start free</a>
     </article>
 
-    <article class="plan-card featured">
+    <article class="plan-card featured" id="proPlan" data-plan="pro">
       <div class="plan-visual plan-visual-builder">
         <div class="builder-mock">
           <div class="builder-pill">EXPERT RECOMMENDED PHRASE</div>
@@ -93,7 +93,7 @@
         <li>Advanced ATS analysis</li>
         <li>Premium templates</li>
       </ul>
-      <a class="btn green" href="/signup">Get Pro</a>
+      <a class="btn green" href="#payment">Get Pro</a>
     </article>
 
     <article class="plan-card">
@@ -123,6 +123,20 @@
     </article>
   </section>
 
+  <section class="payment-panel" id="payment" aria-labelledby="payment-title">
+    <div>
+      <span class="plan-tag pro">Pro selected</span>
+      <h2 id="payment-title">Choose a payment method</h2>
+      <p>Pro unlocks unlimited resume projects and premium templates.</p>
+    </div>
+    <div class="payment-options">
+      <label class="payment-option selected"><input type="radio" name="paymentMethod" value="razorpay" checked><span><strong>Razorpay</strong><small>Cards, UPI, net banking</small></span></label>
+      <label class="payment-option"><input type="radio" name="paymentMethod" value="gpay"><span><strong>Google Pay</strong><small>Pay securely with GPay UPI</small></span></label>
+    </div>
+    <button class="btn green" id="payProBtn" type="button">Continue with Razorpay</button>
+    <small class="payment-note" id="paymentNote">Payment gateway setup is required before accepting live payments.</small>
+  </section>
+
   <div class="plans-cta-wrap">
     <button class="btn big-cta" type="button">Next</button>
     <p>By clicking “Next” or “Easy as 1-2-3”, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
@@ -130,5 +144,28 @@
 </main>
 
 <script src="/static/app.js"></script>
+<script>
+  const paymentPanel = document.getElementById('payment');
+  const proPlan = document.getElementById('proPlan');
+  const query = new URLSearchParams(window.location.search);
+  if(query.get('select') === 'pro'){
+    proPlan.classList.add('selected-plan');
+    paymentPanel.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  const payButton = document.getElementById('payProBtn');
+  const paymentNote = document.getElementById('paymentNote');
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(input=>input.addEventListener('change', event=>{
+    document.querySelectorAll('.payment-option').forEach(option=>option.classList.toggle('selected', option.querySelector('input') === event.target));
+    payButton.textContent = event.target.value === 'gpay' ? 'Continue with Google Pay' : 'Continue with Razorpay';
+  }));
+  payButton.addEventListener('click', async ()=>{
+    const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const me = await fetch('/api/me').then(response=>response.json());
+    if(!me.user){ window.location.href = '/login?next=/plans?select=pro%26checkout=1'; return; }
+    paymentNote.textContent = method === 'gpay'
+      ? 'Google Pay selected. Configure a verified UPI payment link to continue.'
+      : 'Razorpay selected. Add RAZORPAY_KEY_ID and server verification to enable checkout.';
+  });
+</script>
 </body>
 </html>

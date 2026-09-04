@@ -26,7 +26,7 @@ function initFooter(){
         <h4>Resume</h4>
         <ul>
           <li><a href="/builder">Resume Builder</a></li>
-          <li><a href="/builder">Resume Templates</a></li>
+          <li><a href="/templates">Resume Templates</a></li>
           <li><a href="/career-blog">Resume Examples</a></li>
           <li><a href="/career-blog">How to Write a Resume</a></li>
         </ul>
@@ -35,7 +35,7 @@ function initFooter(){
         <h4>CV</h4>
         <ul>
           <li><a href="/cv-builder">CV Builder</a></li>
-          <li><a href="/cv-builder">CV Templates</a></li>
+          <li><a href="/templates">CV Templates</a></li>
           <li><a href="/career-blog">European CV Format</a></li>
           <li><a href="/career-blog">How to Write a CV</a></li>
         </ul>
@@ -124,7 +124,8 @@ async function submitAuth(event, endpoint){
     const response = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:form.email.value, password:form.password.value})});
     const data = await response.json();
     if(!response.ok) throw new Error(data.error || 'Request failed.');
-    window.location.href = '/builder';
+    const next = new URLSearchParams(window.location.search).get('next');
+    window.location.href = next || '/builder';
   }catch(error){ message.textContent = error.message; }
 }
 
@@ -198,6 +199,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initFooter();
   initUserMenu();
   initDarkMode();
+  initTemplateGallery();
   const blogGrid = document.getElementById('blogGrid');
   if(blogGrid){
     const filterBar = document.querySelector('.blog-filters');
@@ -269,3 +271,41 @@ document.addEventListener('DOMContentLoaded', ()=>{
     contact.reset();
   });
 });
+
+function initTemplateGallery(){
+  const grid = document.getElementById('templateGrid');
+  if(!grid) return;
+  const styles = ['classic','modern','creative','minimal'];
+  const names = ['Avery','Morgan','Jordan','Riley','Casey','Taylor','Jamie','Alex','Quinn','Parker'];
+  const roles = ['Product Designer','Marketing Specialist','Software Engineer','Project Manager','Data Analyst','Operations Lead'];
+  const templates = Array.from({length:120}, (_, index)=>({
+    id:index + 1,
+    style:styles[index % styles.length],
+    name:names[index % names.length],
+    role:roles[index % roles.length]
+  }));
+  let selected = 'all';
+  function render(){
+    const visible = templates.filter(template=>selected === 'all' || template.style === selected);
+    grid.innerHTML = visible.map(template=>`
+      <article class="template-card">
+        <div class="resume-preview ${template.style}">
+          <div class="resume-preview-head"><strong>${template.name} Johnson</strong><span>${template.role}</span></div>
+          <div class="resume-preview-body"><i></i><i></i><i class="short"></i><b></b><i></i><i class="short"></i><b></b><i></i><i></i></div>
+        </div>
+        <div class="template-card-info"><div><span class="template-number">${String(template.id).padStart(2,'0')}</span><h2>${template.style[0].toUpperCase() + template.style.slice(1)} ${template.id}</h2></div><button class="btn light use-template" data-template-id="${template.id}">Use template</button></div>
+      </article>`).join('');
+    const count = document.getElementById('templateCount');
+    if(count) count.textContent = `${visible.length} free templates`;
+    grid.querySelectorAll('.use-template').forEach(button=>button.addEventListener('click',()=>{
+      localStorage.setItem('selectedTemplate', button.dataset.templateId);
+      window.location.href = '/builder';
+    }));
+  }
+  document.querySelectorAll('[data-template-filter]').forEach(button=>button.addEventListener('click',()=>{
+    selected = button.dataset.templateFilter;
+    document.querySelectorAll('[data-template-filter]').forEach(item=>item.classList.toggle('active', item === button));
+    render();
+  }));
+  render();
+}

@@ -64,6 +64,42 @@ def initialize_database():
                 FOREIGN KEY(user_id) REFERENCES users(id)
             )"""
         )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS resume_usage (
+                user_id INTEGER PRIMARY KEY,
+                resume_count INTEGER NOT NULL DEFAULT 0,
+                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )"""
+        )
+
+
+initialize_database()
+
+
+def user_resume_access():
+    if session.get("is_admin"):
+        return {"isAdmin": True, "plan": "admin", "resumeCount": 0, "canCreate": True}
+    user_id = session.get("user_id")
+    if not user_id:
+        return None
+    with database_connection() as connection:
+        plan = connection.execute(
+            "SELECT plan_type, status FROM resume_plans WHERE user_id = ?", (user_id,)
+        ).fetchone()
+        usage = connection.execute(
+            "SELECT resume_count FROM resume_usage WHERE user_id = ?", (user_id,)
+        ).fetchone()
+    plan_type = plan["plan_type"] if plan else "free"
+    active_plan = plan and plan["status"] == "active"
+    count = usage["resume_count"] if usage else 0
+    unlimited = plan_type in {"pro", "pro-plus"} and active_plan
+    return {
+        "isAdmin": False,
+        "plan": plan_type,
+        "resumeCount": count,
+        "canCreate": unlimited or count < 1,
+    }
 
 
 def current_user_required(view):
@@ -197,6 +233,11 @@ def plans_page():
     return page("plans.html")
 
 
+@app.get("/templates")
+def templates_page():
+    return page("templates.html")
+
+
 @app.get("/how-it-works")
 def how_it_works_page():
     return page("how-it-works.html")
@@ -217,7 +258,7 @@ def cover_letter():
 
 @app.get("/builder")
 def builder():
-    if "user_id" not in session:
+    if "user_id" not in session and not session.get("is_admin"):
         from flask import redirect
         return redirect("/login")
     return page("html.html")
@@ -331,16 +372,49 @@ def login():
     if user is None or not check_password_hash(user["password_hash"], password):
         return jsonify(error="Email or password is incorrect."), 401
     session["user_id"] = user["id"]
-    return jsonify(user={"email": user["email"]})
+    return jsonify(user={"email": user["email"]}, resumeAccess=user_resume_access())
 
 
 @app.get("/api/me")
 def me():
+    if session.get("is_admin"):
+        return jsonify(user={"email": ADMIN_EMAIL, "isAdmin": True}, resumeAccess=user_resume_access())
     if "user_id" not in session:
         return jsonify(user=None)
     with database_connection() as connection:
         user = connection.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()
-    return jsonify(user={"email": user["email"]} if user else None)
+    return jsonify(user={"email": user["email"]} if user else None, resumeAccess=user_resume_access() if user else None)
+
+
+@app.get("/api/resume/access")
+def resume_access():
+    access = user_resume_access()
+    if access is None:
+        return jsonify(error="Please sign in first."), 401
+    return jsonify(access=access)
+
+
+@app.post("/api/resume/claim")
+def claim_resume():
+    access = user_resume_access()
+    if access is None:
+        return jsonify(error="Please sign in first."), 401
+    if access["isAdmin"] or access["plan"] in {"pro", "pro-plus"}:
+        return jsonify(ok=True, access=access)
+    user_id = session["user_id"]
+    with database_connection() as connection:
+        connection.execute(
+            "INSERT OR IGNORE INTO resume_usage (user_id, resume_count) VALUES (?, 0)",
+            (user_id,),
+        )
+        cursor = connection.execute(
+            "UPDATE resume_usage SET resume_count = resume_count + 1, updated_at=CURRENT_TIMESTAMP "
+            "WHERE user_id = ? AND resume_count < 1",
+            (user_id,),
+        )
+    if cursor.rowcount != 1:
+        return jsonify(error="Your free resume is already used. Upgrade to Pro to create unlimited resumes.", upgrade=True), 402
+    return jsonify(ok=True, access=user_resume_access())
 
 
 @app.post("/api/logout")
