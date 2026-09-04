@@ -60,6 +60,8 @@ def initialize_database():
             connection.execute("ALTER TABLE users ADD COLUMN name TEXT NOT NULL DEFAULT ''")
         if "phone" not in user_columns:
             connection.execute("ALTER TABLE users ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
+        if "welcome_sent_at" not in user_columns:
+            connection.execute("ALTER TABLE users ADD COLUMN welcome_sent_at TEXT")
         connection.execute(
             """CREATE TABLE IF NOT EXISTS resume_plans (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -305,7 +307,7 @@ WELCOME_HTML = """\
     <p>Welcome to <strong>Dossier</strong>. Like you, we take your job search very seriously, offering the fastest way to build polished resumes and match them against real job descriptions.</p>
     <p>With your account you will have an all-access pass to our resume builder, CV builder, ATS scanner, and career blog — everything you need to job search with confidence.</p>
     <div class="cta"><a href="https://dossier.app/builder">Open Your Workspace Now</a></div>
-    <p>Our team is always ready to help you any way we can. Feel free to reach out with any questions.</p>
+    <p>Learn more <a href="https://dossier.app/about">About Us</a>, or contact Dossier at <a href="mailto:support@dossier.app">support@dossier.app</a>. We are here to help with any questions.</p>
     <p class="sign">Wishing You Great Success,<br><strong>The Dossier Team</strong></p>
   </div>
   <div class="footer">
@@ -321,10 +323,10 @@ WELCOME_HTML = """\
 """
 
 
-def send_signup_emails(user_name: str, user_email: str) -> None:
-    """Send welcome email to new user and a signup alert to the company inbox."""
+def send_welcome_email(user_name: str, user_email: str) -> bool:
+    """Send one personalized welcome email and report whether delivery was attempted successfully."""
     if mail is None or not app.config["MAIL_USERNAME"]:
-        return  # email not configured — skip silently
+        return False  # email not configured — skip silently
     try:
         welcome = Message(
             subject="Welcome to Dossier — your resume workspace is ready",
@@ -333,7 +335,18 @@ def send_signup_emails(user_name: str, user_email: str) -> None:
         )
         mail.send(welcome)
     except Exception:
-        pass  # never block signup if mail fails
+        return False  # never block authentication if mail fails
+    return True
+
+
+def send_signup_emails(user_name: str, user_email: str) -> None:
+    """Send the welcome email and a signup alert to the company inbox."""
+    if send_welcome_email(user_name, user_email):
+        with database_connection() as connection:
+            connection.execute(
+                "UPDATE users SET welcome_sent_at=CURRENT_TIMESTAMP WHERE email=?",
+                (user_email,),
+            )
     if COMPANY_EMAIL:
         try:
             alert = Message(
@@ -385,7 +398,13 @@ def login():
     if user is None or not check_password_hash(user["password_hash"], password):
         return jsonify(error="Email or password is incorrect."), 401
     session["user_id"] = user["id"]
-    return jsonify(user={"email": user["email"]}, resumeAccess=user_resume_access())
+    if not user["welcome_sent_at"] and send_welcome_email(user["name"], user["email"]):
+        with database_connection() as connection:
+            connection.execute(
+                "UPDATE users SET welcome_sent_at=CURRENT_TIMESTAMP WHERE id=?",
+                (user["id"],),
+            )
+    return jsonify(user={"name": user["name"], "phone": user["phone"], "email": user["email"]}, resumeAccess=user_resume_access())
 
 
 @app.get("/api/me")
