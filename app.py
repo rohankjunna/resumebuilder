@@ -54,6 +54,11 @@ def initialize_database():
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )"""
         )
+        user_columns = {row["name"] for row in connection.execute("PRAGMA table_info(users)")}
+        if "name" not in user_columns:
+            connection.execute("ALTER TABLE users ADD COLUMN name TEXT NOT NULL DEFAULT ''")
+        if "phone" not in user_columns:
+            connection.execute("ALTER TABLE users ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
         connection.execute(
             """CREATE TABLE IF NOT EXISTS resume_plans (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -342,14 +347,21 @@ def send_signup_emails(user_email: str) -> None:
 
 @app.post("/api/signup")
 def signup():
+    data = request.get_json(silent=True) or {}
+    name = " ".join(str(data.get("name", "")).strip().split())
+    phone = str(data.get("phone", "")).strip()
+    if len(name) < 2:
+        return jsonify(error="Enter your full name."), 400
+    if not re.fullmatch(r"[+\d()\-\s]{7,20}", phone):
+        return jsonify(error="Enter a valid phone number."), 400
     email, password, error = request_credentials()
     if error:
         return jsonify(error=error[0]), error[1]
     try:
         with database_connection() as connection:
             cursor = connection.execute(
-                "INSERT INTO users (email, password_hash) VALUES (?, ?)",
-                (email, generate_password_hash(password)),
+                "INSERT INTO users (name, phone, email, password_hash) VALUES (?, ?, ?, ?)",
+                (name, phone, email, generate_password_hash(password)),
             )
             user_id = cursor.lastrowid
             session["user_id"] = user_id
@@ -359,7 +371,7 @@ def signup():
     except sqlite3.IntegrityError:
         return jsonify(error="An account with that email already exists."), 409
     send_signup_emails(email)
-    return jsonify(user={"email": email}), 201
+    return jsonify(user={"name": name, "phone": phone, "email": email}), 201
 
 
 @app.post("/api/login")
@@ -382,8 +394,8 @@ def me():
     if "user_id" not in session:
         return jsonify(user=None)
     with database_connection() as connection:
-        user = connection.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()
-    return jsonify(user={"email": user["email"]} if user else None, resumeAccess=user_resume_access() if user else None)
+        user = connection.execute("SELECT name, phone, email FROM users WHERE id = ?", (session["user_id"],)).fetchone()
+    return jsonify(user=dict(user) if user else None, resumeAccess=user_resume_access() if user else None)
 
 
 @app.get("/api/resume/access")

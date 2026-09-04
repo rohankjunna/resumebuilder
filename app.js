@@ -127,7 +127,12 @@ async function submitAuth(event, endpoint){
   const form = event.currentTarget;
   const message = form.querySelector('.form-message');
   try{
-    const response = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:form.email.value, password:form.password.value})});
+    const payload = {email:form.email.value, password:form.password.value};
+    if(endpoint === '/api/signup'){
+      payload.name = form.elements.name.value;
+      payload.phone = form.elements.phone.value;
+    }
+    const response = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
     const data = await response.json();
     if(!response.ok) throw new Error(data.error || 'Request failed.');
     const next = new URLSearchParams(window.location.search).get('next');
