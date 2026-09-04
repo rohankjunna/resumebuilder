@@ -3,6 +3,7 @@
 import os
 import re
 import sqlite3
+from markupsafe import escape
 from io import BytesIO
 from functools import wraps
 
@@ -320,7 +321,7 @@ WELCOME_HTML = """\
 """
 
 
-def send_signup_emails(user_email: str) -> None:
+def send_signup_emails(user_name: str, user_email: str) -> None:
     """Send welcome email to new user and a signup alert to the company inbox."""
     if mail is None or not app.config["MAIL_USERNAME"]:
         return  # email not configured — skip silently
@@ -328,7 +329,7 @@ def send_signup_emails(user_email: str) -> None:
         welcome = Message(
             subject="Welcome to Dossier — your resume workspace is ready",
             recipients=[user_email],
-            html=WELCOME_HTML,
+            html=WELCOME_HTML.replace("Dear Dossier Job Seeker", f"Dear {escape(user_name)}"),
         )
         mail.send(welcome)
     except Exception:
@@ -370,7 +371,7 @@ def signup():
             )
     except sqlite3.IntegrityError:
         return jsonify(error="An account with that email already exists."), 409
-    send_signup_emails(email)
+    send_signup_emails(name, email)
     return jsonify(user={"name": name, "phone": phone, "email": email}), 201
 
 
