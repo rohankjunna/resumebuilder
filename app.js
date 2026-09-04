@@ -5,6 +5,14 @@ function setActivePage(){
   });
 }
 
+function normalizeProductNav(){
+  const labels = {'/builder':'Resume Builder','/cv-builder':'CV Builder','/cover-letter':'Cover Letter','/career-blog':'Career Blog','/about':'About us','/contact':'Contact'};
+  document.querySelectorAll('.nav a').forEach(link=>{
+    const path = new URL(link.href, window.location.origin).pathname;
+    if(labels[path]) link.textContent = labels[path];
+  });
+}
+
 function initFooter(){
   if(document.querySelector('.site-footer')) return;
   const footer = document.createElement('footer');
@@ -205,6 +213,7 @@ async function initUserMenu(){
 
 document.addEventListener('DOMContentLoaded', ()=>{
   setActivePage();
+  normalizeProductNav();
   initNavDropdown();
   initNavToggle();
   initFooter();
