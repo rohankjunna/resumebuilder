@@ -7,27 +7,27 @@
 <script>if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('builder-dark');</script>
 <style>
   :root{
-    --ink:#20241d;
-    --ink-soft:#4b5148;
-    --paper:#e8e4d6;
-    --sheet:#fffdf7;
-    --line:#c7c0a9;
-    --line-soft:#dcd6c3;
-    --match:#33604f;
-    --match-bg:#e4ece6;
-    --gap:#9a3d2c;
+    --ink:#27364b;
+    --ink-soft:#617087;
+    --paper:#fff;
+    --sheet:#fff;
+    --line:#e8edf3;
+    --line-soft:#dbe4ec;
+    --match:#1d9f98;
+    --match-bg:#eefbf8;
+    --gap:#a94d3b;
     --gap-bg:#f3e4de;
-    --gold:#a97a26;
-    --gold-bg:#f2e8d4;
+    --gold:#1d9f98;
+    --gold-bg:#eefbf8;
     --radius:2px;
-    --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+    --serif: 'Trebuchet MS', 'Segoe UI', sans-serif;
     --mono: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:var(--paper);
+    background:radial-gradient(circle at 18% 40%,#d7f8ff 0,transparent 28%),radial-gradient(circle at 72% 70%,#eee9ff 0,transparent 30%),var(--paper);
     color:var(--ink);
     font-family:var(--sans);
     -webkit-font-smoothing:antialiased;
@@ -208,7 +208,7 @@
     box-shadow:0 8px 24px rgba(30,28,20,0.10);
     padding:46px 48px;
     font-family:var(--serif);
-    color:#1a1c17;
+    color:#27364b;
     min-height:600px;
   }
   .sheet h1{
@@ -217,14 +217,14 @@
   .sheet .contact-line{
     font-family:var(--sans);
     font-size:12px;
-    color:#4a4d43;
+    color:#617087;
     margin-bottom:16px;
   }
   .sheet .summary{
     font-size:13.5px;
     line-height:1.6;
     margin-bottom:18px;
-    color:#2b2d26;
+    color:#374151;
   }
   .sheet section{ margin-bottom:16px; }
   .sheet section h2{
@@ -243,7 +243,7 @@
   }
   .sheet .item-head .role{ font-weight:700; }
   .sheet .item-head .dates{ font-family:var(--sans); font-size:11.5px; color:#5c5f53; white-space:nowrap; }
-  .sheet .item-sub{ font-size:12.5px; font-style:italic; color:#4a4d43; margin-bottom:4px; }
+  .sheet .item-sub{ font-size:12.5px; font-style:italic; color:#617087; margin-bottom:4px; }
   .sheet ul{ margin:4px 0 0 18px; padding:0; font-size:12.8px; line-height:1.55; }
   .sheet .skills-line{ font-size:12.8px; line-height:1.7; }
 
