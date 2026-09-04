@@ -355,10 +355,13 @@
   }
   .brand .mark{color:#3fc8c5;font-family:'Segoe UI',sans-serif;font-size:21px;letter-spacing:-.04em;}
   .brand .tag{color:#617087;}
-  nav.tabs{background:#f4f6f8;border-radius:20px;padding:3px;display:flex;justify-content:center;width:fit-content;margin:0 auto;}
-  nav.tabs button{border-radius:18px;color:#526176;padding:7px 16px;font-size:13px;transition:background .2s ease,color .2s ease,transform .2s ease;}
-  nav.tabs button:hover{transform:translateY(-1px);}
-  nav.tabs button.active{background:#42d9bf;color:#123c48;box-shadow:none;}
+  .workspace-switch{position:relative;}
+  .workspace-button{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:22px;color:#27364b;cursor:pointer;font-size:13px;padding:8px 14px;transition:background .2s ease,border-color .2s ease;}
+  .workspace-button:hover{border-color:#42d9bf;background:#eefbf8;}
+  .workspace-menu{background:#fff;border:1px solid #e2eaf1;border-radius:12px;box-shadow:0 12px 30px #26364b20;display:none;min-width:160px;padding:6px;position:absolute;right:0;top:42px;z-index:30;}
+  .workspace-menu.open{display:flex;flex-direction:column;gap:2px;}
+  .workspace-option{background:transparent;border:0;border-radius:7px;color:#526176;cursor:pointer;font:13px 'Segoe UI',sans-serif;padding:10px;text-align:left;width:100%;}
+  .workspace-option:hover,.workspace-option.active{background:#eefbf8;color:#1d9f98;}
   .topbar-right{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
   .topnav{display:flex;align-items:center;justify-content:center;gap:18px;white-space:nowrap;}
   .topnav a{animation:nav-link-in .45s ease both;color:#526176;font-size:13px;text-decoration:none;transition:color .2s ease,transform .2s ease;}
@@ -401,15 +404,17 @@
   .user-drop a:hover,.drop-item:hover{background:#eefbf8;color:#1d9f98;}
   .drop-divider{border-top:1px solid #edf0f4;margin:5px 0;}
   .drop-logout{color:#a94d3b;}
-  .theme-toggle{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:22px;color:#27364b;cursor:pointer;font-size:15px;height:34px;width:34px;}
+  .theme-toggle{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:22px;color:#27364b;cursor:pointer;font-size:11px;font-weight:700;height:34px;padding:0 12px;}
   .theme-toggle:hover{border-color:#42d9bf;}
   .builder-dark body{background:radial-gradient(circle at 18% 40%,#261b3a 0,transparent 28%),radial-gradient(circle at 72% 70%,#33251d 0,transparent 30%),#0f0a1a;color:#e2d9f3;}
   .builder-dark .topbar{background:rgba(20,12,35,.95);border-color:#2e2040;box-shadow:0 5px 16px #00000060;}
   .builder-dark .topnav a{color:#a89bc2;}
   .builder-dark .topnav a:hover{color:#b57bee;}
-  .builder-dark nav.tabs{background:#1e1430;}
-  .builder-dark nav.tabs button{color:#a89bc2;}
-  .builder-dark nav.tabs button.active{background:#7c3aed;color:#f0e8ff;}
+  .builder-dark .workspace-button{background:#1e1430;border-color:#3a2a55;color:#e2d9f3;}
+  .builder-dark .workspace-button:hover{background:#2a1a40;border-color:#7c3aed;}
+  .builder-dark .workspace-menu{background:#1a1228;border-color:#2e2040;box-shadow:0 12px 30px #00000060;}
+  .builder-dark .workspace-option{color:#a89bc2;}
+  .builder-dark .workspace-option:hover,.builder-dark .workspace-option.active{background:#2a1a40;color:#b57bee;}
   .builder-dark .brand .tag,.builder-dark .resume-picker{color:#a89bc2;}
   .builder-dark .resume-picker select,.builder-dark select,.builder-dark input[type=text],.builder-dark input[type=email],.builder-dark input[type=tel],.builder-dark input[type=month],.builder-dark textarea{background:#120d1f;border-color:#3a2a55;color:#e2d9f3;}
   .builder-dark .card,.builder-dark .sheet,.builder-dark .score-card,.builder-dark .kw-panel,.builder-dark .suggestions,.builder-dark .lib-item{background:rgba(26,18,40,.92);border-color:#2e2040;box-shadow:0 12px 35px #00000050;}
@@ -426,8 +431,8 @@
   .builder-dark .user-drop-name{color:#e2d9f3;}
   .builder-dark .user-drop-email,.builder-dark .user-drop a,.builder-dark .drop-item{color:#a89bc2;}
   .builder-dark .user-drop a:hover,.builder-dark .drop-item:hover{background:#2a1a40;color:#b57bee;}
-  @media(prefers-reduced-motion:reduce){.topnav a{animation:none;transition:none}.topnav a:hover,nav.tabs button:hover{transform:none}}
-  @media(max-width:920px){.topbar{grid-template-columns:auto auto;grid-template-rows:auto auto auto;}.topbar .topnav{grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:8px 14px;justify-content:flex-start;}.topbar nav.tabs{grid-column:1/-1;margin:0;}.topbar-right{grid-column:1/-1;grid-row:3;}.builder-grid{grid-template-columns:1fr}.preview-wrap{position:static}}
+  @media(prefers-reduced-motion:reduce){.topnav a{animation:none;transition:none}.workspace-button{transition:none}.topnav a:hover{transform:none}}
+  @media(max-width:920px){.topbar{grid-template-columns:auto auto;grid-template-rows:auto auto auto;}.topbar .topnav{grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:8px 14px;justify-content:flex-start;}.topbar-right{grid-column:1/-1;grid-row:3;}.builder-grid{grid-template-columns:1fr}.preview-wrap{position:static}}
 
   /* ---------- Mobile (≤600px) ---------- */
   @media(max-width:600px){
@@ -435,8 +440,9 @@
     .brand .mark{font-size:18px;}
     .brand .tag{display:none;}
     .topnav{display:none;}
-    nav.tabs{order:3;width:100%;justify-content:stretch;}
-    nav.tabs button{flex:1;padding:7px 6px;font-size:12px;}
+    .workspace-switch{order:3;width:100%;}
+    .workspace-button{width:100%;}
+    .workspace-menu{left:0;right:0;top:40px;}
     .account-area{gap:6px;}
     .account-email{max-width:100px;font-size:11px;}
     .btn.small{padding:6px 10px;font-size:11px;}
@@ -483,11 +489,14 @@
     <a href="/contact">Contact</a>
   </nav>
   <div class="topbar-right">
-    <nav class="tabs">
-      <button data-view="build" class="active">Build</button>
-      <button data-view="analyze">Scan vs JD</button>
-      <button data-view="library">Library</button>
-    </nav>
+    <div class="workspace-switch">
+      <button class="workspace-button" id="workspaceButton" type="button" aria-expanded="false">Workspace: Build</button>
+      <div class="workspace-menu" id="workspaceMenu">
+        <button class="workspace-option active" data-view="build" type="button">Build</button>
+        <button class="workspace-option" data-view="analyze" type="button">Scan vs JD</button>
+        <button class="workspace-option" data-view="library" type="button">Library</button>
+      </div>
+    </div>
     <div class="resume-picker">
       <select id="resumeSelect"></select>
     </div>
@@ -509,7 +518,7 @@
         <a href="/cover-letter">Cover Letter Builder</a>
         <a href="/cv-builder">CV Builder</a>
         <div class="drop-divider"></div>
-        <button class="drop-item drop-logout" id="logoutBtn">🚪 Log out</button>
+        <button class="drop-item drop-logout" id="logoutBtn">Log out</button>
       </div>
     </div>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">&#9790;</button>
@@ -716,7 +725,7 @@ async function loadUser(){
       menuBtn.setAttribute('aria-expanded', open);
     });
     document.querySelectorAll('.workspace-link').forEach(link=>link.addEventListener('click', ()=>{
-      const target = document.querySelector(`nav.tabs button[data-view="${link.dataset.viewLink}"]`);
+      const target = document.querySelector(`.workspace-option[data-view="${link.dataset.viewLink}"]`);
       if(target) target.click();
       drop.classList.remove('open');
       menuBtn.setAttribute('aria-expanded', 'false');
@@ -734,7 +743,7 @@ document.getElementById('logoutBtn').addEventListener('click', async ()=>{
 const themeToggle = document.getElementById('themeToggle');
 function updateThemeToggle(){
   const dark = document.documentElement.classList.contains('builder-dark');
-  themeToggle.innerHTML = dark ? '&#9728;' : '&#9790;';
+  themeToggle.textContent = dark ? 'Light' : 'Dark';
   themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
 }
@@ -1052,14 +1061,28 @@ function resumeToPlainText(r){
   return out.filter(Boolean).join('\n');
 }
 
-/* ============================= TABS ============================= */
-document.querySelectorAll('nav.tabs button').forEach(btn=>{
+/* ============================= WORKSPACE MENU ============================= */
+const workspaceButton = document.getElementById('workspaceButton');
+const workspaceMenu = document.getElementById('workspaceMenu');
+workspaceButton.addEventListener('click', event=>{
+  event.stopPropagation();
+  const open = workspaceMenu.classList.toggle('open');
+  workspaceButton.setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', ()=>{
+  workspaceMenu.classList.remove('open');
+  workspaceButton.setAttribute('aria-expanded', 'false');
+});
+document.querySelectorAll('.workspace-option').forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.workspace-option').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-' + btn.dataset.view).classList.add('active');
     currentView = btn.dataset.view;
+    workspaceButton.textContent = 'Workspace: ' + btn.textContent;
+    workspaceMenu.classList.remove('open');
+    workspaceButton.setAttribute('aria-expanded', 'false');
     if(currentView === 'library') renderLibrary();
     if(currentView === 'analyze') refreshAnalyzeResumeSelect();
   });
@@ -1396,7 +1419,7 @@ async function renderLibrary(){
       </div>`;
     div.querySelector('[data-act=load]').addEventListener('click', ()=>{
       resume = r; loadFormFromResume(); refreshResumeSelects();
-      document.querySelector('nav.tabs button[data-view=build]').click();
+      document.querySelector('.workspace-option[data-view=build]').click();
       toast('Loaded "' + r.label + '"');
     });
     div.querySelector('[data-act=delete]').addEventListener('click', async ()=>{
