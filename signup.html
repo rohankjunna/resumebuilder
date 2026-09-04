@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Sign up | Dossier</title>
+        <link rel="stylesheet" href="/static/styles.css"></head>
+        <body data-page="auth"><script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+            <header class="topbar"><a class="brand" href="/">Dossier <small>resume workshop</small>
+            </a><div class="auth-links"><a class="btn light" href="/about">About us</a><a class="btn light" href="/contact">Contact</a>
+            </div>
+            </header>
+            <main class="auth-wrap"><form class="auth-card" id="signupForm">
+                <h1>Start your dossier.</h1>
+                <p>Create an account and keep your applications in one place.</p>
+                <div class="field"><label for="email">EMAIL</label>
+                <input id="email" name="email" type="email" required>
+                </div><div class="field">
+                    <label for="password">PASSWORD</label>
+                    <input id="password" name="password" type="password" minlength="8" required>
+                    </div><div class="form-message" role="alert"></div>
+                    <button class="btn green" type="submit">Create account</button>
+                    <div class="switch">Already have an account?
+                         <a href="/login">Log in</a>
+                    </div>
+                    <div class="switch"><a href="/">← Back to home</a></div>
+                    </form>
+                    </main>
+                    <script src="/static/app.js">
+
+            </script>
+            </body>
+            </html>

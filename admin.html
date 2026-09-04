@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard | Dossier</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    .admin-wrap{max-width:1200px;margin:0 auto;padding:40px 20px 80px}
+    .admin-title{font:700 32px var(--serif);color:#34465c;margin-bottom:6px}
+    .admin-sub{color:var(--soft);font-size:14px;margin-bottom:32px}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+    .stat-card{background:rgba(255,255,255,.9);border:1px solid #e4ebf2;border-radius:14px;padding:22px 24px;box-shadow:0 4px 14px #516b800d}
+    .stat-card .stat-label{color:var(--soft);font:11px monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+    .stat-card .stat-value{font:700 36px var(--serif);color:#34465c}
+    .admin-section{margin-bottom:36px}
+    .admin-section h2{font:700 18px var(--serif);color:#34465c;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #e4ebf2}
+    .chart-bar-wrap{display:flex;align-items:flex-end;gap:4px;height:100px;margin-bottom:6px}
+    .chart-bar{background:linear-gradient(180deg,#42d9bf,#4d89f7);border-radius:4px 4px 0 0;min-width:18px;flex:1;transition:opacity .2s;cursor:default;position:relative}
+    .chart-bar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#27364b;color:#fff;font-size:11px;padding:3px 7px;border-radius:6px;white-space:nowrap;pointer-events:none}
+    .chart-labels{display:flex;gap:4px;font:10px monospace;color:var(--soft);overflow:hidden}
+    .chart-labels span{flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .plan-pills{display:flex;flex-wrap:wrap;gap:10px}
+    .plan-pill{background:rgba(255,255,255,.9);border:1px solid #e4ebf2;border-radius:10px;padding:12px 18px;font-size:14px;color:#34465c}
+    .plan-pill strong{display:block;font-size:22px;font:700 22px var(--serif)}
+    .plan-pill .pill-label{color:var(--soft);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+    .users-table{width:100%;border-collapse:collapse;font-size:13px}
+    .users-table th{text-align:left;color:var(--soft);font:11px monospace;letter-spacing:.05em;text-transform:uppercase;padding:8px 10px;border-bottom:2px solid #e4ebf2}
+    .users-table td{padding:9px 10px;border-bottom:1px solid #f0f4f8;color:#34465c;vertical-align:middle}
+    .users-table tr:last-child td{border-bottom:none}
+    .users-table tr:hover td{background:#f8fafc}
+    .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .badge-free{background:#e8f4f8;color:#2d7a8a}
+    .badge-pro{background:#ede9fe;color:#6d28d9}
+    .badge-active{background:#d1fae5;color:#065f46}
+    .badge-inactive{background:#fee2e2;color:#991b1b}
+    .badge-cancelled{background:#fef3c7;color:#92400e}
+    .plan-select,.status-select{border:1px solid #dbe4ec;border-radius:7px;padding:4px 8px;font-size:12px;color:#34465c;background:#fff;cursor:pointer}
+    .save-btn{background:var(--green);border:none;border-radius:7px;color:#123c48;cursor:pointer;font-size:12px;padding:4px 10px;margin-left:4px}
+    .save-btn:hover{filter:brightness(.95)}
+    .admin-loading{color:var(--soft);font-size:14px;padding:20px 0}
+    body.dark .admin-title{color:#e2d9f3}
+    body.dark .admin-sub{color:#a89bc2}
+    body.dark .stat-card{background:rgba(26,18,40,.92);border-color:#2e2040}
+    body.dark .stat-card .stat-value{color:#e2d9f3}
+    body.dark .admin-section h2{color:#e2d9f3;border-bottom-color:#2e2040}
+    body.dark .plan-pill{background:rgba(26,18,40,.92);border-color:#2e2040;color:#e2d9f3}
+    body.dark .users-table th{border-bottom-color:#2e2040}
+    body.dark .users-table td{border-bottom-color:#2e2040;color:#e2d9f3}
+    body.dark .users-table tr:hover td{background:#1e1430}
+    body.dark .plan-select,.status-select{background:#120d1f;border-color:#3a2a55;color:#e2d9f3}
+    @media(max-width:760px){.stat-grid{grid-template-columns:1fr 1fr}.users-table{font-size:12px}}
+    @media(max-width:480px){.stat-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body data-page="admin">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <div class="auth-links">
+    <a class="btn light" href="/">← Home</a>
+    <button class="btn light" id="adminLogout">Log out</button>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+  </div>
+</header>
+
+<main class="admin-wrap">
+  <div class="admin-title">Admin Dashboard</div>
+  <div class="admin-sub">Website engagement, user signups, and resume plan overview</div>
+
+  <div id="adminContent" class="admin-loading">Loading dashboard…</div>
+</main>
+
+<script>
+(async () => {
+  // Auth guard — admin session is server-side, just try loading stats
+  const res = await fetch('/api/admin/stats');
+  if (!res.ok) {
+    if (res.status === 403) { window.location.href = '/admin/login'; return; }
+    document.getElementById('adminContent').innerHTML = '<p style="color:#e53e3e">Failed to load stats.</p>'; return;
+  }
+  const d = await res.json();
+
+  // Build chart
+  const days = [...d.signupsByDay].reverse();
+  const maxCount = Math.max(...days.map(x => x.count), 1);
+  const bars = days.map(x => `<div class="chart-bar" style="height:${Math.max(8, Math.round(x.count/maxCount*100))}%" data-tip="${x.day}: ${x.count}"></div>`).join('');
+  const labels = days.map(x => `<span>${x.day.slice(5)}</span>`).join('');
+
+  // Plan pills
+  const planMap = {};
+  d.planBreakdown.forEach(p => { planMap[`${p.plan_type}|${p.status}`] = p.count; });
+  const planTypes = [...new Set(d.planBreakdown.map(p => p.plan_type))];
+  const pills = planTypes.map(pt => {
+    const active = planMap[`${pt}|active`] || 0;
+    return `<div class="plan-pill"><strong>${active}</strong><span class="pill-label">${pt} · active</span></div>`;
+  }).join('') || '<div class="plan-pill"><strong>—</strong><span class="pill-label">No plans yet</span></div>';
+
+  // Users table
+  const rows = d.recentUsers.map(u => {
+    const uid = btoa(u.email); // use as key for inline edit
+    const planBadge = u.plan === 'pro' ? 'badge-pro' : 'badge-free';
+    const statusBadge = u.status === 'active' ? 'badge-active' : u.status === 'cancelled' ? 'badge-cancelled' : 'badge-inactive';
+    return `<tr>
+      <td>${u.email}</td>
+      <td>${u.created_at ? u.created_at.slice(0,10) : '—'}</td>
+      <td><span class="badge ${planBadge}">${u.plan}</span></td>
+      <td><span class="badge ${statusBadge}">${u.status}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value">${d.totalUsers}</div></div>
+      <div class="stat-card"><div class="stat-label">New Today</div><div class="stat-value">${d.newToday}</div></div>
+      <div class="stat-card"><div class="stat-label">New This Week</div><div class="stat-value">${d.newThisWeek}</div></div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Signups — Last 30 Days</h2>
+      ${days.length ? `<div class="chart-bar-wrap">${bars}</div><div class="chart-labels">${labels}</div>` : '<p class="admin-loading">No signup data yet.</p>'}
+    </div>
+
+    <div class="admin-section">
+      <h2>Resume Plan Breakdown</h2>
+      <div class="plan-pills">${pills}</div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Recent Users (last 50)</h2>
+      ${d.recentUsers.length ? `
+      <div style="overflow-x:auto">
+        <table class="users-table">
+          <thead><tr><th>Email</th><th>Joined</th><th>Plan</th><th>Status</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>` : '<p class="admin-loading">No users yet.</p>'}
+    </div>
+  `;
+})();
+
+// Admin logout
+document.getElementById('adminLogout').addEventListener('click', async () => {
+  await fetch('/api/admin/logout', {method: 'POST'});
+  window.location.href = '/admin/login';
+});
+
+// Dark toggle
+document.getElementById('darkToggle').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+});
+</script>
+</body>
+</html>

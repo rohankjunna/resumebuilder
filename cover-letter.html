@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cover Letter Builder | Dossier</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-page="cover-letter">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+<script>fetch('/api/me').then(r=>r.json()).then(d=>{if(!d.user)window.location.href='/login';});</script>
+
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <nav class="nav">
+    <a href="/builder">📄 Resume Builder</a>
+    <a href="/cv-builder">📋 CV Builder</a>
+    <a data-page="cover-letter" href="/cover-letter">✉️ Cover Letter</a>
+    <a href="/career-blog">📰 Career Blog</a>
+    <a href="/about">💡 About us</a>
+    <a href="/contact">📬 Contact</a>
+  </nav>
+  <div class="auth-links">
+    <a class="btn light" href="/login">Log in</a>
+    <a class="btn" href="/signup">Sign up</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main class="cv-main">
+  <div class="cv-heading">
+    <div>
+      <span class="eyebrow">Dossier Cover Letter Builder</span>
+      <h1>Write a cover letter that opens doors.</h1>
+      <p class="muted">Fill in the details and get a polished, print-ready cover letter in seconds.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn light" id="clDocx">Download DOCX</button>
+      <button class="btn green" id="clPdf">Download PDF</button>
+    </div>
+  </div>
+
+  <div class="cv-layout">
+
+    <!-- FORM -->
+    <section class="cv-form">
+
+      <div class="cv-card">
+        <h2>Your details</h2>
+        <div class="cv-row">
+          <div class="field"><label>FULL NAME</label><input id="clName" placeholder="Alex Morgan"></div>
+          <div class="field"><label>JOB TITLE APPLYING FOR</label><input id="clJobTitle" placeholder="Senior Product Designer"></div>
+        </div>
+        <div class="cv-row">
+          <div class="field"><label>EMAIL</label><input id="clEmail" type="email" placeholder="alex@email.com"></div>
+          <div class="field"><label>PHONE</label><input id="clPhone" type="tel" placeholder="+1 555 000 0000"></div>
+        </div>
+        <div class="cv-row">
+          <div class="field"><label>LOCATION</label><input id="clLocation" placeholder="London, UK"></div>
+          <div class="field"><label>DATE</label><input id="clDate" placeholder="January 2026"></div>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Recipient details</h2>
+        <div class="cv-row">
+          <div class="field"><label>HIRING MANAGER NAME</label><input id="clHiringManager" placeholder="Jamie Lee (or 'Hiring Manager')"></div>
+          <div class="field"><label>COMPANY NAME</label><input id="clCompany" placeholder="Acme Studio"></div>
+        </div>
+        <div class="field"><label>COMPANY ADDRESS (optional)</label><input id="clCompanyAddress" placeholder="123 Main St, New York, NY 10001"></div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Opening paragraph</h2>
+        <div class="field">
+          <label>WHY YOU'RE WRITING &amp; WHERE YOU FOUND THE ROLE</label>
+          <textarea id="clOpening" placeholder="I am writing to express my strong interest in the Senior Product Designer role at Acme Studio, which I discovered on LinkedIn. With over five years of experience designing user-centred digital products, I am excited by the opportunity to contribute to your team."></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Body — your value</h2>
+        <div class="field">
+          <label>KEY SKILLS, ACHIEVEMENTS &amp; WHY YOU FIT THIS ROLE</label>
+          <textarea id="clBody" placeholder="In my current role at TechCorp, I led the redesign of the core onboarding flow, reducing drop-off by 34% and increasing activation by 22%. I bring deep expertise in Figma, design systems, and cross-functional collaboration with engineering and product teams.&#10;&#10;I am particularly drawn to Acme Studio's commitment to accessibility-first design, which aligns closely with my own values and experience building inclusive products."></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Closing paragraph</h2>
+        <div class="field">
+          <label>CALL TO ACTION &amp; SIGN-OFF</label>
+          <textarea id="clClosing" placeholder="I would welcome the opportunity to discuss how my background and skills align with your needs. I have attached my resume for your review and am available at your convenience for an interview.&#10;&#10;Thank you for your time and consideration."></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Signature</h2>
+        <div class="field"><label>SIGN-OFF (e.g. Sincerely, Best regards)</label><input id="clSignoff" placeholder="Sincerely,"></div>
+      </div>
+
+    </section>
+
+    <!-- LIVE PREVIEW -->
+    <section class="cv-preview-wrap">
+      <div class="cv-preview" id="clPreview">
+
+        <div class="cl-sender">
+          <p id="pName" class="cl-name">Alex Morgan</p>
+          <p id="pContact" class="cl-contact">alex@email.com &nbsp;·&nbsp; +1 555 000 0000 &nbsp;·&nbsp; London, UK</p>
+        </div>
+
+        <div class="cl-meta">
+          <p id="pDate">January 2026</p>
+          <p id="pRecipient"><strong>Jamie Lee</strong><br>Acme Studio<br></p>
+        </div>
+
+        <div class="cl-subject">
+          <p>Re: <strong id="pJobTitle">Senior Product Designer</strong></p>
+        </div>
+
+        <div class="cl-salutation">
+          <p id="pSalutation">Dear Jamie Lee,</p>
+        </div>
+
+        <div class="cl-body">
+          <p id="pOpening">I am writing to express my strong interest in the Senior Product Designer role at Acme Studio, which I discovered on LinkedIn. With over five years of experience designing user-centred digital products, I am excited by the opportunity to contribute to your team.</p>
+          <p id="pBody" style="white-space:pre-line">In my current role at TechCorp, I led the redesign of the core onboarding flow, reducing drop-off by 34% and increasing activation by 22%. I bring deep expertise in Figma, design systems, and cross-functional collaboration with engineering and product teams.
+
+I am particularly drawn to Acme Studio's commitment to accessibility-first design, which aligns closely with my own values and experience building inclusive products.</p>
+          <p id="pClosing" style="white-space:pre-line">I would welcome the opportunity to discuss how my background and skills align with your needs. I have attached my resume for your review and am available at your convenience for an interview.
+
+Thank you for your time and consideration.</p>
+        </div>
+
+        <div class="cl-signoff">
+          <p id="pSignoff">Sincerely,</p>
+          <p id="pSignName" class="cl-sign-name">Alex Morgan</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="/static/app.js"></script>
+<script>
+/* ── field → preview map ── */
+const clMap = {
+  clName:           v => { _t('pName', v||'Your Name'); _t('pSignName', v||'Your Name'); },
+  clJobTitle:       v => _t('pJobTitle', v||'Job Title'),
+  clEmail:          v => refreshContact(),
+  clPhone:          v => refreshContact(),
+  clLocation:       v => refreshContact(),
+  clDate:           v => _t('pDate', v||''),
+  clHiringManager:  v => refreshRecipient(),
+  clCompany:        v => refreshRecipient(),
+  clCompanyAddress: v => refreshRecipient(),
+  clOpening:        v => _t('pOpening', v||''),
+  clBody:           v => _t('pBody', v||''),
+  clClosing:        v => _t('pClosing', v||''),
+  clSignoff:        v => _t('pSignoff', v||'Sincerely,'),
+};
+
+function _t(id, val){ const el = document.getElementById(id); if(el) el.textContent = val; }
+
+function refreshContact(){
+  const parts = [
+    document.getElementById('clEmail').value,
+    document.getElementById('clPhone').value,
+    document.getElementById('clLocation').value,
+  ].filter(Boolean);
+  document.getElementById('pContact').textContent = parts.join('  ·  ') || 'email · phone · location';
+}
+
+function refreshRecipient(){
+  const mgr  = document.getElementById('clHiringManager').value || 'Hiring Manager';
+  const co   = document.getElementById('clCompany').value;
+  const addr = document.getElementById('clCompanyAddress').value;
+  document.getElementById('pRecipient').innerHTML =
+    `<strong>${esc(mgr)}</strong>${co ? '<br>'+esc(co) : ''}${addr ? '<br>'+esc(addr) : ''}`;
+  document.getElementById('pSalutation').textContent = `Dear ${mgr},`;
+}
+
+function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+Object.keys(clMap).forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', e => clMap[id](e.target.value));
+});
+
+/* ── download helpers ── */
+function clPayload(){
+  return {
+    name:            document.getElementById('clName').value,
+    job_title:       document.getElementById('clJobTitle').value,
+    email:           document.getElementById('clEmail').value,
+    phone:           document.getElementById('clPhone').value,
+    location:        document.getElementById('clLocation').value,
+    date:            document.getElementById('clDate').value,
+    hiring_manager:  document.getElementById('clHiringManager').value,
+    company:         document.getElementById('clCompany').value,
+    company_address: document.getElementById('clCompanyAddress').value,
+    opening:         document.getElementById('clOpening').value,
+    body:            document.getElementById('clBody').value,
+    closing:         document.getElementById('clClosing').value,
+    signoff:         document.getElementById('clSignoff').value,
+  };
+}
+
+async function dlCL(fmt){
+  try{
+    const res = await fetch(`/api/download/cover-letter/${fmt}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(clPayload())
+    });
+    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.error||'Download failed.'); }
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `dossier-cover-letter.${fmt}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }catch(e){ alert(e.message); }
+}
+
+document.getElementById('clDocx').addEventListener('click', ()=>dlCL('docx'));
+document.getElementById('clPdf').addEventListener('click',  ()=>dlCL('pdf'));
+</script>
+
+<style>
+/* ── Cover letter preview styles ── */
+.cl-sender{ border-bottom:2px solid var(--green,#42d9bf); padding-bottom:16px; margin-bottom:20px; }
+.cl-name{ font-size:22px; font-weight:700; color:#34465c; margin:0 0 4px; font-family:var(--serif,'Trebuchet MS',sans-serif); }
+.cl-contact{ font-size:12px; color:#617087; margin:0; }
+.cl-meta{ margin-bottom:20px; font-size:13px; color:#617087; line-height:1.7; }
+.cl-meta p{ margin:0 0 10px; }
+.cl-subject{ margin-bottom:16px; font-size:13px; }
+.cl-salutation{ margin-bottom:16px; font-size:13px; font-weight:600; }
+.cl-body p{ font-size:13px; line-height:1.75; color:#374151; margin:0 0 14px; }
+.cl-signoff{ margin-top:24px; font-size:13px; }
+.cl-signoff p{ margin:0 0 6px; }
+.cl-sign-name{ font-weight:700; color:#34465c; font-size:14px; }
+
+body.dark .cl-name{ color:#e2d9f3; }
+body.dark .cl-contact{ color:#a89bc2; }
+body.dark .cl-meta{ color:#a89bc2; }
+body.dark .cl-body p{ color:#c4b8d8; }
+body.dark .cl-sign-name{ color:#e2d9f3; }
+body.dark .cl-sender{ border-bottom-color:#7c3aed; }
+
+@media(max-width:760px){
+  .cv-heading>div:last-child{ width:100%; }
+  .cv-heading>div:last-child .btn{ flex:1; text-align:center; }
+}
+</style>
+</body>
+</html>

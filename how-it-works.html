@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How it works | Dossier</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-page="about">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <nav class="nav">
+    <a data-page="home" href="/">🏠 Dashboard</a>
+    <div class="nav-dropdown">
+      <button class="nav-drop-btn">🧰 Products &#9660;</button>
+      <div class="nav-drop-menu">
+        <a href="/builder"><span class="drop-icon">📄</span><span><strong>Resume Builder</strong><small>Build a job-winning resume</small></span></a>
+        <a href="/cv-builder"><span class="drop-icon">📋</span><span><strong>CV Builder</strong><small>Create a professional CV</small></span></a>
+        <a href="/cover-letter"><span class="drop-icon">✉️</span><span><strong>Cover Letter Builder</strong><small>Write a compelling cover letter</small></span></a>
+      </div>
+    </div>
+    <a data-page="plans" href="/plans">💳 Plans</a>
+    <a data-page="about" href="/about">💡 About us</a>
+    <a data-page="blog" href="/career-blog">📰 Career Blog</a>
+    <a data-page="contact" href="/contact">📬 Contact</a>
+  </nav>
+  <div class="auth-links">
+    <a class="btn light" href="/login">Log in</a>
+    <a class="btn" href="/signup">Sign up</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main class="how-it-works-page">
+  <div class="how-topbar">
+    <div class="how-brand">Resume Builder</div>
+    <div class="how-partner">Trusted partner of <span>MONSTER</span> &amp; <span>CareerBuilder</span></div>
+  </div>
+
+  <section class="how-hero">
+    <h1>Easy as 1-2-3</h1>
+  </section>
+
+  <section class="how-grid">
+    <article class="how-card">
+      <div class="how-visual visual-template">
+        <div class="template-document">
+          <div class="doc-line"></div>
+          <div class="doc-line short"></div>
+          <div class="doc-line"></div>
+          <div class="doc-line short"></div>
+        </div>
+      </div>
+      <div class="how-step-row">
+        <span class="step-number">1</span>
+        <h3>Select a template</h3>
+      </div>
+    </article>
+
+    <article class="how-card">
+      <div class="how-visual visual-builder">
+        <div class="builder-panel">
+          <div class="mini-pill">EXPERT RECOMMENDED PHRASE</div>
+          <div class="mini-pill muted"></div>
+          <div class="mini-pill muted small"></div>
+        </div>
+      </div>
+      <div class="how-step-row">
+        <span class="step-number">2</span>
+        <h3>Build your resume</h3>
+      </div>
+      <p>with our industry-specific bullet points</p>
+    </article>
+
+    <article class="how-card">
+      <div class="how-visual visual-download">
+        <div class="download-badges">
+          <span class="badge blue">.TXT</span>
+          <span class="badge purple">.WORD</span>
+          <span class="badge pink">.PDF</span>
+        </div>
+      </div>
+      <div class="how-step-row">
+        <span class="step-number">3</span>
+        <h3>Download</h3>
+      </div>
+    </article>
+  </section>
+
+  <div class="how-cta-wrap">
+    <button class="btn big-cta" type="button">Next</button>
+    <p>By clicking “Next” or “Easy as 1-2-3”, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
+  </div>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
