@@ -6,7 +6,7 @@ function setActivePage(){
 }
 
 function normalizeProductNav(){
-  const labels = {'/builder':'Resume Builder','/cv-builder':'CV Builder','/cover-letter':'Cover Letter','/career-blog':'Career Blog','/about':'About us','/contact':'Contact'};
+  const labels = {'/builder':'📄 Resume Builder','/cv-builder':'📋 CV Builder','/cover-letter':'✉️ Cover Letter','/career-blog':'📰 Career Blog','/about':'💡 About us','/contact':'📬 Contact'};
   document.querySelectorAll('.nav a').forEach(link=>{
     const path = new URL(link.href, window.location.origin).pathname;
     if(labels[path]) link.textContent = labels[path];
