@@ -345,7 +345,7 @@
     body{ background:white; }
   }
 
-  /* Match the CV Builder visual system */
+  /* Shared Dossier visual system */
   body{background:radial-gradient(circle at 18% 40%,#d7f8ff 0,transparent 28%),radial-gradient(circle at 72% 70%,#eee9ff 0,transparent 30%),#fff;color:#27364b;font-family:'Segoe UI',sans-serif;}
   .topbar{
     align-items:center;background:rgba(255,255,255,.95);border:1px solid #edf0f4;
@@ -404,7 +404,7 @@
   .user-drop a:hover,.drop-item:hover{background:#eefbf8;color:#1d9f98;}
   .drop-divider{border-top:1px solid #edf0f4;margin:5px 0;}
   .drop-logout{color:#a94d3b;}
-  .theme-toggle{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:22px;color:#27364b;cursor:pointer;font-size:11px;font-weight:700;height:34px;padding:0 12px;}
+  .theme-toggle{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:50%;color:#27364b;cursor:pointer;font-size:16px;height:34px;line-height:1;padding:0;width:34px;}
   .theme-toggle:hover{border-color:#42d9bf;}
   .builder-dark body{background:radial-gradient(circle at 18% 40%,#261b3a 0,transparent 28%),radial-gradient(circle at 72% 70%,#33251d 0,transparent 30%),#0f0a1a;color:#e2d9f3;}
   .builder-dark .topbar{background:rgba(20,12,35,.95);border-color:#2e2040;box-shadow:0 5px 16px #00000060;}
@@ -470,16 +470,17 @@
     .source-toggle button{width:100%;}
   }
 
-  /* Shared Dossier site theme */
+  /* Shared Dossier component theme */
   body{background:radial-gradient(circle at 18% 40%,#d7f8ff 0,transparent 28%),radial-gradient(circle at 72% 70%,#eee9ff 0,transparent 30%),#fff;color:#27364b;font-family:'Segoe UI',sans-serif;}
-  .topbar{background:rgba(255,255,255,.95);border:1px solid #edf0f4;border-radius:28px;box-shadow:0 5px 16px #26364b12;}
+  .topbar{align-items:center;background:rgba(255,255,255,.95);border:1px solid #edf0f4;border-radius:28px;box-shadow:0 5px 16px #26364b12;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin:12px 14px;padding:10px 16px;position:sticky;top:10px;}
   .brand .mark{background:linear-gradient(120deg,#3fc8c5,#42d9bf,#4d89f7,#a78bfa,#3fc8c5);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
   .brand .tag,.resume-picker,.topnav a,.workspace-option{color:#526176;}
   .topnav a:hover{color:#1d9f98;}
   .workspace-button,.theme-toggle,.user-menu-btn{background:#f4f6f8;border-color:#f4f6f8;color:#27364b;}
   .workspace-menu,.user-drop{background:#fff;border-color:#e4ebf2;box-shadow:0 12px 35px #26364b18;}
   .workspace-option:hover,.workspace-option.active,.user-drop a:hover,.drop-item:hover{background:#eefbf8;color:#1d9f98;}
-  .card,.sheet,.score-card,.kw-panel,.suggestions,.lib-item{background:rgba(255,255,255,.9);border-color:#e2eaf1;box-shadow:0 8px 24px #516b800d;}
+  main{margin:0 auto;max-width:1220px;padding:50px 20px 80px;}
+  .card,.sheet,.score-card,.kw-panel,.suggestions,.lib-item{background:rgba(255,255,255,.88);border:1px solid #e2eaf1;border-radius:14px;box-shadow:0 8px 24px #516b800d;}
   .card h3,.sheet h1,.sheet section h2{color:#34465c;}
   .field label,.sheet .contact-line,.sheet .summary{color:#617087;}
   .entry-block{border-color:#e2eaf1;}
@@ -773,7 +774,7 @@ document.getElementById('logoutBtn').addEventListener('click', async ()=>{
 const themeToggle = document.getElementById('themeToggle');
 function updateThemeToggle(){
   const dark = document.documentElement.classList.contains('builder-dark');
-  themeToggle.textContent = dark ? 'Light' : 'Dark';
+  themeToggle.textContent = dark ? '\u2600' : '\u263e';
   themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
 }
