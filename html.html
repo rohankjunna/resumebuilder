@@ -356,12 +356,15 @@
   .brand .mark{color:#3fc8c5;font-family:'Segoe UI',sans-serif;font-size:21px;letter-spacing:-.04em;}
   .brand .tag{color:#617087;}
   nav.tabs{background:#f4f6f8;border-radius:20px;padding:3px;display:flex;justify-content:center;width:fit-content;margin:0 auto;}
-  nav.tabs button{border-radius:18px;color:#526176;padding:7px 16px;font-size:13px;}
+  nav.tabs button{border-radius:18px;color:#526176;padding:7px 16px;font-size:13px;transition:background .2s ease,color .2s ease,transform .2s ease;}
+  nav.tabs button:hover{transform:translateY(-1px);}
   nav.tabs button.active{background:#42d9bf;color:#123c48;box-shadow:none;}
   .topbar-right{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
   .topnav{display:flex;align-items:center;justify-content:center;gap:18px;white-space:nowrap;}
-  .topnav a{color:#526176;font-size:13px;text-decoration:none;}
-  .topnav a:hover{color:#1d9f98;}
+  .topnav a{animation:nav-link-in .45s ease both;color:#526176;font-size:13px;text-decoration:none;transition:color .2s ease,transform .2s ease;}
+  .topnav a:nth-child(2){animation-delay:.04s}.topnav a:nth-child(3){animation-delay:.08s}.topnav a:nth-child(4){animation-delay:.12s}.topnav a:nth-child(5){animation-delay:.16s}.topnav a:nth-child(6){animation-delay:.2s}
+  .topnav a:hover{color:#1d9f98;transform:translateY(-2px);}
+  @keyframes nav-link-in{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
   .resume-picker{color:#526176;}
   .resume-picker select{font-size:12px;padding:6px 10px;border-radius:20px;border:1px solid #dbe4ec;background:#f8fafc;color:#526176;max-width:160px;}
   select,input[type=text],input[type=email],input[type=tel],input[type=month],textarea{background:#fff;border:1px solid #dbe4ec;border-radius:9px;color:#27364b;}
@@ -423,6 +426,7 @@
   .builder-dark .user-drop-name{color:#e2d9f3;}
   .builder-dark .user-drop-email,.builder-dark .user-drop a,.builder-dark .drop-item{color:#a89bc2;}
   .builder-dark .user-drop a:hover,.builder-dark .drop-item:hover{background:#2a1a40;color:#b57bee;}
+  @media(prefers-reduced-motion:reduce){.topnav a{animation:none;transition:none}.topnav a:hover,nav.tabs button:hover{transform:none}}
   @media(max-width:920px){.topbar{grid-template-columns:auto auto;grid-template-rows:auto auto auto;}.topbar .topnav{grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:8px 14px;justify-content:flex-start;}.topbar nav.tabs{grid-column:1/-1;margin:0;}.topbar-right{grid-column:1/-1;grid-row:3;}.builder-grid{grid-template-columns:1fr}.preview-wrap{position:static}}
 
   /* ---------- Mobile (≤600px) ---------- */
