@@ -338,7 +338,7 @@ WELCOME_HTML = """\
 
 def send_welcome_email(user_name: str, user_email: str) -> bool:
     """Send one personalized welcome email and report whether delivery was attempted successfully."""
-    if mail is None or not app.config["MAIL_USERNAME"]:
+    if mail is None or not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
         return False  # email not configured — skip silently
     try:
         welcome = Message(
@@ -658,8 +658,8 @@ def reply_to_contact(message_id):
         ).fetchone()
     if message is None:
         return jsonify(error="Message not found."), 404
-    if mail is None or not app.config["MAIL_USERNAME"]:
-        return jsonify(error="Email delivery is not configured."), 503
+    if mail is None or not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
+        return jsonify(error="Email delivery is not configured. Set MAIL_USERNAME and MAIL_PASSWORD, then restart the app."), 503
     try:
         mail.send(Message(
             subject="Reply from Dossier Customer Care",
