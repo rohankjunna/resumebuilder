@@ -359,6 +359,9 @@
   nav.tabs button{border-radius:18px;color:#526176;padding:7px 16px;font-size:13px;}
   nav.tabs button.active{background:#42d9bf;color:#123c48;box-shadow:none;}
   .topbar-right{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+  .topnav{display:flex;align-items:center;justify-content:center;gap:18px;white-space:nowrap;}
+  .topnav a{color:#526176;font-size:13px;text-decoration:none;}
+  .topnav a:hover{color:#1d9f98;}
   .resume-picker{color:#526176;}
   .resume-picker select{font-size:12px;padding:6px 10px;border-radius:20px;border:1px solid #dbe4ec;background:#f8fafc;color:#526176;max-width:160px;}
   select,input[type=text],input[type=email],input[type=tel],input[type=month],textarea{background:#fff;border:1px solid #dbe4ec;border-radius:9px;color:#27364b;}
@@ -397,34 +400,37 @@
   .drop-logout{color:#a94d3b;}
   .theme-toggle{background:#f4f6f8;border:1px solid #e2eaf1;border-radius:22px;color:#27364b;cursor:pointer;font-size:15px;height:34px;width:34px;}
   .theme-toggle:hover{border-color:#42d9bf;}
-  .builder-dark body{background:radial-gradient(circle at 18% 40%,#123b43 0,transparent 28%),radial-gradient(circle at 72% 70%,#282044 0,transparent 30%),#101820;color:#e8eef2;}
-  .builder-dark .topbar{background:rgba(21,31,40,.96);border-color:#30414d;box-shadow:0 5px 16px #00000040;}
-  .builder-dark nav.tabs{background:#1c2a34;}
-  .builder-dark nav.tabs button{color:#aebfc8;}
-  .builder-dark nav.tabs button.active{background:#42d9bf;color:#123c48;}
-  .builder-dark .brand .tag,.builder-dark .resume-picker{color:#aebfc8;}
-  .builder-dark .resume-picker select,.builder-dark select,.builder-dark input[type=text],.builder-dark input[type=email],.builder-dark input[type=tel],.builder-dark input[type=month],.builder-dark textarea{background:#17232c;border-color:#3a4d59;color:#e8eef2;}
-  .builder-dark .card,.builder-dark .sheet,.builder-dark .score-card,.builder-dark .kw-panel,.builder-dark .suggestions,.builder-dark .lib-item{background:rgba(23,35,44,.94);border-color:#30414d;box-shadow:0 8px 24px #00000030;}
-  .builder-dark .card h3,.builder-dark .sheet h1,.builder-dark .sheet section h2{color:#e8eef2;}
-  .builder-dark .field label,.builder-dark .sheet .contact-line,.builder-dark .sheet .summary{color:#aebfc8;}
-  .builder-dark .entry-block{border-color:#30414d;}
-  .builder-dark .btn.secondary{background:#1c2a34;border-color:#3a4d59;color:#e8eef2;}
-  .builder-dark .sheet{color:#e8eef2;}
-  .builder-dark .user-menu-btn,.builder-dark .theme-toggle{background:#1c2a34;border-color:#3a4d59;color:#e8eef2;}
-  .builder-dark .user-menu-lines span{background:#e8eef2;}
-  .builder-dark .user-menu-arrow{color:#aebfc8;}
-  .builder-dark .user-drop{background:#17232c;border-color:#30414d;box-shadow:0 12px 30px #00000060;}
-  .builder-dark .user-drop-header,.builder-dark .drop-divider{border-color:#30414d;}
-  .builder-dark .user-drop-name{color:#e8eef2;}
-  .builder-dark .user-drop-email,.builder-dark .user-drop a,.builder-dark .drop-item{color:#aebfc8;}
-  .builder-dark .user-drop a:hover,.builder-dark .drop-item:hover{background:#193c3d;color:#42d9bf;}
-  @media(max-width:920px){.topbar{grid-template-columns:auto auto;grid-template-rows:auto auto;}.topbar nav.tabs{grid-column:1/-1;margin:0;}.topbar-right{grid-column:2;grid-row:1;}.builder-grid{grid-template-columns:1fr}.preview-wrap{position:static}}
+  .builder-dark body{background:radial-gradient(circle at 18% 40%,#261b3a 0,transparent 28%),radial-gradient(circle at 72% 70%,#33251d 0,transparent 30%),#0f0a1a;color:#e2d9f3;}
+  .builder-dark .topbar{background:rgba(20,12,35,.95);border-color:#2e2040;box-shadow:0 5px 16px #00000060;}
+  .builder-dark .topnav a{color:#a89bc2;}
+  .builder-dark .topnav a:hover{color:#b57bee;}
+  .builder-dark nav.tabs{background:#1e1430;}
+  .builder-dark nav.tabs button{color:#a89bc2;}
+  .builder-dark nav.tabs button.active{background:#7c3aed;color:#f0e8ff;}
+  .builder-dark .brand .tag,.builder-dark .resume-picker{color:#a89bc2;}
+  .builder-dark .resume-picker select,.builder-dark select,.builder-dark input[type=text],.builder-dark input[type=email],.builder-dark input[type=tel],.builder-dark input[type=month],.builder-dark textarea{background:#120d1f;border-color:#3a2a55;color:#e2d9f3;}
+  .builder-dark .card,.builder-dark .sheet,.builder-dark .score-card,.builder-dark .kw-panel,.builder-dark .suggestions,.builder-dark .lib-item{background:rgba(26,18,40,.92);border-color:#2e2040;box-shadow:0 12px 35px #00000050;}
+  .builder-dark .card h3,.builder-dark .sheet h1,.builder-dark .sheet section h2{color:#e2d9f3;}
+  .builder-dark .field label,.builder-dark .sheet .contact-line,.builder-dark .sheet .summary{color:#a89bc2;}
+  .builder-dark .entry-block{border-color:#2e2040;}
+  .builder-dark .btn.secondary{background:#1e1430;border-color:#3a2a55;color:#e2d9f3;}
+  .builder-dark .sheet{color:#e2d9f3;}
+  .builder-dark .user-menu-btn,.builder-dark .theme-toggle{background:#1e1430;border-color:#3a2a55;color:#e2d9f3;}
+  .builder-dark .user-menu-lines span{background:#e2d9f3;}
+  .builder-dark .user-menu-arrow{color:#a89bc2;}
+  .builder-dark .user-drop{background:#1a1228;border-color:#2e2040;box-shadow:0 12px 30px #00000060;}
+  .builder-dark .user-drop-header,.builder-dark .drop-divider{border-color:#2e2040;}
+  .builder-dark .user-drop-name{color:#e2d9f3;}
+  .builder-dark .user-drop-email,.builder-dark .user-drop a,.builder-dark .drop-item{color:#a89bc2;}
+  .builder-dark .user-drop a:hover,.builder-dark .drop-item:hover{background:#2a1a40;color:#b57bee;}
+  @media(max-width:920px){.topbar{grid-template-columns:auto auto;grid-template-rows:auto auto auto;}.topbar .topnav{grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:8px 14px;justify-content:flex-start;}.topbar nav.tabs{grid-column:1/-1;margin:0;}.topbar-right{grid-column:1/-1;grid-row:3;}.builder-grid{grid-template-columns:1fr}.preview-wrap{position:static}}
 
   /* ---------- Mobile (≤600px) ---------- */
   @media(max-width:600px){
     .topbar{padding:10px 14px;gap:8px;border-radius:18px;margin:8px 10px;top:8px;}
     .brand .mark{font-size:18px;}
     .brand .tag{display:none;}
+    .topnav{display:none;}
     nav.tabs{order:3;width:100%;justify-content:stretch;}
     nav.tabs button{flex:1;padding:7px 6px;font-size:12px;}
     .account-area{gap:6px;}
@@ -464,12 +470,20 @@
     <span class="mark">Dossier</span>
     <span class="tag">resume workshop</span>
   </div>
-  <nav class="tabs">
-    <button data-view="build" class="active">Build</button>
-    <button data-view="analyze">Scan vs JD</button>
-    <button data-view="library">Library</button>
+  <nav class="topnav">
+    <a href="/builder">Resume Builder</a>
+    <a href="/cv-builder">CV Builder</a>
+    <a href="/cover-letter">Cover Letter</a>
+    <a href="/career-blog">Career Blog</a>
+    <a href="/about">About us</a>
+    <a href="/contact">Contact</a>
   </nav>
   <div class="topbar-right">
+    <nav class="tabs">
+      <button data-view="build" class="active">Build</button>
+      <button data-view="analyze">Scan vs JD</button>
+      <button data-view="library">Library</button>
+    </nav>
     <div class="resume-picker">
       <select id="resumeSelect"></select>
     </div>
