@@ -690,23 +690,36 @@ document.getElementById('logoutBtn').addEventListener('click', async ()=>{
 });
 
 /* ============================= STORAGE ============================= */
+const storage = window.storage || {
+  async set(key, value){ localStorage.setItem('dossier:' + key, value); return {ok:true}; },
+  async get(key){ return {value: localStorage.getItem('dossier:' + key)}; },
+  async delete(key){ localStorage.removeItem('dossier:' + key); return {ok:true}; },
+  async list(prefix){
+    const keys = [];
+    for(let index = 0; index < localStorage.length; index++){
+      const key = localStorage.key(index);
+      if(key && key.startsWith('dossier:' + prefix)) keys.push(key.slice('dossier:'.length));
+    }
+    return {keys};
+  }
+};
 async function storeResume(r){
   try{
-    await window.storage.set('resume:' + r.id, JSON.stringify(r), false);
+    await storage.set('resume:' + r.id, JSON.stringify(r), false);
     return true;
   }catch(e){ console.error('save resume failed', e); return false; }
 }
 async function deleteStoredResume(id){
-  try{ await window.storage.delete('resume:' + id, false); }catch(e){}
+  try{ await storage.delete('resume:' + id, false); }catch(e){}
 }
 async function listResumes(){
   try{
-    const res = await window.storage.list('resume:', false);
+    const res = await storage.list('resume:', false);
     if(!res || !res.keys) return [];
     const out = [];
     for(const k of res.keys){
       try{
-        const v = await window.storage.get(k, false);
+        const v = await storage.get(k, false);
         if(v && v.value) out.push(JSON.parse(v.value));
       }catch(e){}
     }
@@ -715,19 +728,19 @@ async function listResumes(){
   }catch(e){ return []; }
 }
 async function storeScan(s){
-  try{ await window.storage.set('scan:' + s.id, JSON.stringify(s), false); }catch(e){}
+  try{ await storage.set('scan:' + s.id, JSON.stringify(s), false); }catch(e){}
 }
 async function deleteStoredScan(id){
-  try{ await window.storage.delete('scan:' + id, false); }catch(e){}
+  try{ await storage.delete('scan:' + id, false); }catch(e){}
 }
 async function listScans(){
   try{
-    const res = await window.storage.list('scan:', false);
+    const res = await storage.list('scan:', false);
     if(!res || !res.keys) return [];
     const out = [];
     for(const k of res.keys){
       try{
-        const v = await window.storage.get(k, false);
+        const v = await storage.get(k, false);
         if(v && v.value) out.push(JSON.parse(v.value));
       }catch(e){}
     }
@@ -1007,7 +1020,7 @@ async function refreshResumeSelects(){
 }
 document.getElementById('resumeSelect').addEventListener('change', async e=>{
   if(e.target.value === '__current') return;
-  const v = await window.storage.get('resume:' + e.target.value, false);
+  const v = await storage.get('resume:' + e.target.value, false);
   if(v && v.value){
     resume = JSON.parse(v.value);
     loadFormFromResume();
@@ -1257,7 +1270,7 @@ document.getElementById('runScanBtn').addEventListener('click', async ()=>{
       resumeLabel = resume.label || 'current resume';
       resumeId = resume.id;
     } else {
-      const v = await window.storage.get('resume:' + sel.value, false);
+      const v = await storage.get('resume:' + sel.value, false);
       const r = v && v.value ? JSON.parse(v.value) : null;
       resumeText = r ? resumeToPlainText(r) : '';
       resumeLabel = r ? r.label : 'saved resume';

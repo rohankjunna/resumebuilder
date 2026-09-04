@@ -109,11 +109,17 @@ async function downloadDocument(kind, fileFormat, payload){
   const response = await fetch(`/api/download/${kind}/${fileFormat}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
   if(!response.ok){ const data = await response.json().catch(()=>({})); throw new Error(data.error || 'Download failed.'); }
   const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
+  link.href = objectUrl;
   link.download = `dossier-${kind}.${fileFormat}`;
+  link.style.display = 'none';
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(link.href);
+  setTimeout(()=>{
+    URL.revokeObjectURL(objectUrl);
+    link.remove();
+  }, 1000);
 }
 
 async function submitAuth(event, endpoint){
