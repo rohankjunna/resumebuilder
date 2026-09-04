@@ -285,10 +285,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if(login) login.addEventListener('submit', event=>submitAuth(event, '/api/login'));
   if(signup) signup.addEventListener('submit', event=>submitAuth(event, '/api/signup'));
   const contact = document.getElementById('contactForm');
-  if(contact) contact.addEventListener('submit', event=>{
+  if(contact) contact.addEventListener('submit', async event=>{
     event.preventDefault();
-    contact.querySelector('.form-message').textContent = 'Thanks. Your message has been received.';
-    contact.reset();
+    const status = contact.querySelector('.form-message');
+    try{
+      const response = await fetch('/api/contact', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:contact.name.value, email:contact.email.value, message:contact.message.value})});
+      const data = await response.json();
+      if(!response.ok) throw new Error(data.error || 'Could not send your message.');
+      status.textContent = 'Thanks. Your message has been received.';
+      contact.reset();
+    }catch(error){ status.textContent = error.message; }
   });
 });
 

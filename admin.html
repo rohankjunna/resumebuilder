@@ -38,6 +38,13 @@
     .save-btn{background:var(--green);border:none;border-radius:7px;color:#123c48;cursor:pointer;font-size:12px;padding:4px 10px;margin-left:4px}
     .save-btn:hover{filter:brightness(.95)}
     .admin-loading{color:var(--soft);font-size:14px;padding:20px 0}
+    .care-message{background:rgba(255,255,255,.9);border:1px solid #e4ebf2;border-radius:12px;margin-bottom:12px;padding:16px}
+    .care-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px}
+    .care-name{color:#34465c;font-weight:700}.care-email{color:#1d9f98;font-size:13px}.care-date{color:var(--soft);font-size:11px}
+    .care-body{color:#526176;line-height:1.6;white-space:pre-wrap;margin-bottom:12px}
+    .care-reply{display:flex;gap:8px;align-items:flex-end}.care-reply textarea{flex:1;min-height:64px;border:1px solid #dbe4ec;border-radius:8px;padding:8px;resize:vertical}.care-reply button{flex-shrink:0}
+    .care-status{color:var(--green-dark);font-size:12px;margin-top:8px}
+    body.dark .care-message{background:rgba(26,18,40,.92);border-color:#2e2040}.dark .care-name{color:#e2d9f3}.dark .care-body{color:#c4b8d8}.dark .care-reply textarea{background:#120d1f;border-color:#3a2a55;color:#e2d9f3}
     body.dark .admin-title{color:#e2d9f3}
     body.dark .admin-sub{color:#a89bc2}
     body.dark .stat-card{background:rgba(26,18,40,.92);border-color:#2e2040}
@@ -107,6 +114,13 @@
       <td><span class="badge ${statusBadge}">${u.status}</span></td>
     </tr>`;
   }).join('');
+  const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const messages = d.contactMessages.map(message => `
+    <article class="care-message">
+      <div class="care-head"><div><span class="care-name">${escapeHtml(message.name)}</span> <span class="care-email">${escapeHtml(message.email)}</span></div><span class="care-date">${escapeHtml(message.created_at)}</span></div>
+      <div class="care-body">${escapeHtml(message.message)}</div>
+      ${message.reply ? `<div class="care-status">Replied: ${escapeHtml(message.reply)}</div>` : `<div class="care-reply"><textarea data-reply-id="${message.id}" placeholder="Write a reply..."></textarea><button class="btn green care-send" data-message-id="${message.id}">Send reply</button></div><div class="care-status" data-status-id="${message.id}"></div>`}
+    </article>`).join('') || '<p class="admin-loading">No customer messages yet.</p>';
 
   document.getElementById('adminContent').innerHTML = `
     <div class="stat-grid">
@@ -126,6 +140,11 @@
     </div>
 
     <div class="admin-section">
+      <h2>Customer Care</h2>
+      ${messages}
+    </div>
+
+    <div class="admin-section">
       <h2>Recent Users (last 50)</h2>
       ${d.recentUsers.length ? `
       <div style="overflow-x:auto">
@@ -136,6 +155,20 @@
       </div>` : '<p class="admin-loading">No users yet.</p>'}
     </div>
   `;
+  document.querySelectorAll('.care-send').forEach(button => button.addEventListener('click', async () => {
+    const id = button.dataset.messageId;
+    const textarea = document.querySelector(`[data-reply-id="${id}"]`);
+    const status = document.querySelector(`[data-status-id="${id}"]`);
+    button.disabled = true;
+    try {
+      const response = await fetch(`/api/admin/contact/${id}/reply`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({reply:textarea.value})});
+      const data = await response.json();
+      if(!response.ok) throw new Error(data.error || 'Reply failed.');
+      status.textContent = 'Reply sent.';
+      textarea.disabled = true;
+      button.remove();
+    } catch(error) { status.textContent = error.message; button.disabled = false; }
+  }));
 })();
 
 // Admin logout

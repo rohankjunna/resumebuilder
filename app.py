@@ -80,6 +80,19 @@ def initialize_database():
                 FOREIGN KEY(user_id) REFERENCES users(id)
             )"""
         )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS contact_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                message TEXT NOT NULL,
+                reply TEXT,
+                replied_at TEXT,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )"""
+        )
 
 
 initialize_database()
@@ -455,6 +468,22 @@ def logout():
     return jsonify(ok=True)
 
 
+@app.post("/api/contact")
+def contact_message():
+    data = request.get_json(silent=True) or {}
+    name = " ".join(str(data.get("name", "")).strip().split())
+    email = str(data.get("email", "")).strip().lower()
+    message = str(data.get("message", "")).strip()
+    if len(name) < 2 or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email) or len(message) < 3:
+        return jsonify(error="Enter your name, a valid email, and a message."), 400
+    with database_connection() as connection:
+        connection.execute(
+            "INSERT INTO contact_messages (user_id, name, email, message) VALUES (?, ?, ?, ?)",
+            (session.get("user_id"), name, email, message),
+        )
+    return jsonify(ok=True), 201
+
+
 @app.post("/api/analyze")
 @current_user_required
 def analyze():
@@ -601,6 +630,10 @@ def admin_stats():
                FROM users u LEFT JOIN resume_plans rp ON rp.user_id = u.id
                ORDER BY u.created_at DESC LIMIT 50"""
         ).fetchall()
+        contact_messages = connection.execute(
+            """SELECT id, name, email, message, reply, replied_at, created_at
+               FROM contact_messages ORDER BY created_at DESC LIMIT 100"""
+        ).fetchall()
     return jsonify(
         totalUsers=total_users,
         newToday=new_today,
@@ -608,7 +641,39 @@ def admin_stats():
         signupsByDay=[dict(r) for r in signups_by_day],
         planBreakdown=[dict(r) for r in plan_breakdown],
         recentUsers=[dict(r) for r in recent_users],
+        contactMessages=[dict(r) for r in contact_messages],
     )
+
+
+@app.post("/api/admin/contact/<int:message_id>/reply")
+@admin_required
+def reply_to_contact(message_id):
+    data = request.get_json(silent=True) or {}
+    reply = str(data.get("reply", "")).strip()
+    if not reply:
+        return jsonify(error="Write a reply first."), 400
+    with database_connection() as connection:
+        message = connection.execute(
+            "SELECT email, name FROM contact_messages WHERE id = ?", (message_id,)
+        ).fetchone()
+    if message is None:
+        return jsonify(error="Message not found."), 404
+    if mail is None or not app.config["MAIL_USERNAME"]:
+        return jsonify(error="Email delivery is not configured."), 503
+    try:
+        mail.send(Message(
+            subject="Reply from Dossier Customer Care",
+            recipients=[message["email"]],
+            body=f"Hello {message['name']},\n\n{reply}\n\nRegards,\nDossier Customer Care",
+        ))
+    except Exception:
+        return jsonify(error="The reply could not be sent."), 502
+    with database_connection() as connection:
+        connection.execute(
+            "UPDATE contact_messages SET reply=?, replied_at=CURRENT_TIMESTAMP WHERE id=?",
+            (reply, message_id),
+        )
+    return jsonify(ok=True)
 
 
 @app.post("/api/admin/user/<int:user_id>/plan")
