@@ -2,18 +2,16 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Dossier | Resume workspace</title>
         <link rel="stylesheet" href="/static/styles.css">
     </head>
     <body data-page="home">
-        <script>
-            if(localStorage.getItem('theme')==='dark') {
-                document.body.classList.add('dark');
-            }
-        </script>
+        <script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');</script>
         <header class="topbar">
-            <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+            <a class="brand" href="/">Dossier
+                <small>resume workshop</small>
+            </a>
             <nav class="nav">
                 <a data-page="home" href="/">🏠 Dashboard</a>
                 <div class="nav-dropdown">
@@ -21,19 +19,27 @@
                     <div class="nav-drop-menu">
                         <a href="/builder">
                             <span class="drop-icon">📄</span>
-                            <span><strong>Resume Builder</strong><small>Build a job-winning resume</small></span>
+                            <span>
+                                <strong>Resume Builder</strong>
+                                <small>Build a job-winning resume</small>
+                            </span>
                         </a>
                         <a href="/cv-builder">
                             <span class="drop-icon">📋</span>
-                            <span><strong>CV Builder</strong><small>Create a professional CV</small></span>
+                            <span>
+                                <strong>CV Builder</strong>
+                                <small>Create a professional CV</small>
+                            </span>
                         </a>
                         <a href="/cover-letter">
                             <span class="drop-icon">✉️</span>
-                            <span><strong>Cover Letter Builder</strong><small>Write a compelling cover letter</small></span>
+                            <span>
+                                <strong>Cover Letter Builder</strong>
+                                <small>Write a compelling cover letter</small>
+                            </span>
                         </a>
                     </div>
                 </div>
-                <a data-page="templates" href="/templates">🎨 Templates</a>
                 <a data-page="plans" href="/plans">💳 Plans</a>
                 <a data-page="about" href="/about">💡 About us</a>
                 <a data-page="blog" href="/career-blog">📰 Career Blog</a>
