@@ -8,35 +8,31 @@
     </head>
     <body data-page="home">
         <script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');</script>
-        <header class="topbar">
-            <a class="brand" href="/">Dossier
-                <small>resume workshop</small>
-            </a>
-            <nav class="nav">
-                <a data-page="home" href="/">🏠 Dashboard</a>
-                <div class="nav-dropdown">
-                    <button class="nav-drop-btn">🧰 Products &#9660;</button>
-                    <div class="nav-drop-menu">
-                        <a href="/builder">
-                            <span class="drop-icon">📄</span>
-                            <span>
-                                <strong>Resume Builder</strong>
-                                <small>Build a job-winning resume</small>
-                            </span>
-                        </a>
-                        <a href="/cv-builder">
+<header class="topbar">
+    <a class="brand" href="/">Dossier
+         <small>resume workshop</small>
+        </a>
+        <nav class="nav">
+            <a data-page="home" href="/">🏠 Dashboard</a>
+            <div class="nav-dropdown">
+                <button class="nav-drop-btn">🧰 Products &#9660;</button>
+                <div class="nav-drop-menu">
+                    <a href="/builder">
+                        <span class="drop-icon">📄</span>
+                        <span>
+                            <strong>Resume Builder</strong>
+                            <small>Build a job-winning resume</small>
+                        </span>
+                    </a>
+                    <a href="/cv-builder">
                             <span class="drop-icon">📋</span>
-                            <span>
-                                <strong>CV Builder</strong>
+                            <span><strong>CV Builder</strong>
                                 <small>Create a professional CV</small>
                             </span>
                         </a>
                         <a href="/cover-letter">
                             <span class="drop-icon">✉️</span>
-                            <span>
-                                <strong>Cover Letter Builder</strong>
-                                <small>Write a compelling cover letter</small>
-                            </span>
+                            <span><strong>Cover Letter Builder</strong><small>Write a compelling cover letter</small></span>
                         </a>
                     </div>
                 </div>
@@ -51,3 +47,85 @@
             </div>
             <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
         </header>
+<main>
+    <section class="hero">
+        <div><span class="eyebrow">A sharper way to apply</span>
+            <h1>Your next role starts on paper.</h1>
+            <p>Build a resume with intention, then test it against the language hiring teams actually use.</p>
+            <div class="hero-actions">
+                <a class="btn green" href="/builder">Open resume builder</a>
+                <a class="btn light" href="/how-it-works">How it works</a>
+            </div>
+        </div>
+        <div class="hero-art">
+            <span class="eyebrow">LIVE WORKSPACE</span>
+            <div class="paper-title">Product designer</div>
+            <div class="paper-line"></div>
+            <div class="paper-line short"></div>
+            <div class="paper-line"></div>
+            <div class="paper-line short"></div>
+            <div class="paper-line"></div>
+        </div>
+    </section>
+    <section>
+        <span class="eyebrow">Inside Dossier</span>
+        <h2 class="section-title">One dashboard. Better decisions.</h2>
+        <div class="feature-grid">
+            <article class="feature">
+                <h3>Build clearly</h3>
+                <p class="muted">Shape every section in a focused editor with a live, printable preview.</p>
+            </article>
+            <article class="feature">
+                <h3>Scan honestly</h3>
+                <p class="muted">Compare your resume with a job description and see the terms you cover.</p>
+            </article>
+            <article class="feature">
+                <h3>Keep versions</h3><p class="muted">Save tailored resumes and scan history in your personal library.</p>
+            </article>
+        </div>
+    </section>
+    <section>
+        <span class="eyebrow">Start with the right look</span>
+        <h2 class="section-title">120 free templates, ready for your story.</h2>
+        <p class="muted">Choose a layout for your industry, then make it yours in the builder.</p>
+        <div class="feature-grid">
+            <article class="feature">
+                <div class="resume-preview classic">
+                    <div class="resume-preview-head">
+                        <strong>Alex Johnson</strong>
+                        <span>Product Designer</span>
+                    </div>
+                    <div class="resume-preview-body"><i></i><i></i><i class="short"></i><b></b><i></i><i class="short"></i><b></b><i></i><i></i>
+                    </div>
+                </div>
+            </article>
+            <article class="feature">
+                <div class="resume-preview modern">
+                    <div class="resume-preview-head">
+                        <strong>Jamie Smith</strong>
+                        <span>Marketing Specialist</span>
+                    </div>
+                    <div class="resume-preview-body"><i></i><i></i><i class="short"></i><b></b><i></i><i class="short"></i><b></b><i></i><i></i>
+                    </div>
+                </div>
+            </article>
+            <article class="feature">
+                <div class="resume-preview creative"><div class="resume-preview-head">
+                    <strong>Taylor Lee</strong>
+                    <span>Software Engineer</span>
+                </div>
+                <div class="resume-preview-body"><i></i><i></i><i class="short"></i><b></b><i></i><i class="short"></i><b></b><i></i><i></i>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div style="text-align:center;margin-top:24px;">
+        <a class="btn light" href="/templates">Browse all templates</a>
+    </div>
+</section>
+</main>
+<script src="/static/app.js">
+
+</script>
+</body>
+</html>
