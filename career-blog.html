@@ -1,60 +1,123 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Career Blog | Dossier</title>
-        <link rel="stylesheet" href="/static/styles.css">
-    </head>
-    <body data-page="blog">
-        <script>
-            if(localStorage.getItem('theme')==='dark') {
-                document.body.classList.add('dark');
-            }
-        </script>
-        <header class="topbar">
-            <a class="brand" href="/">Dossier <small>resume workshop</small></a>
-            <nav class="nav">
-                <a data-page="home" href="/">🏠 Dashboard</a>
-                <a data-page="about" href="/about">💡 About us</a>
-                <a data-page="blog" href="/career-blog">📰 Career Blog</a>
-                <a data-page="contact" href="/contact">📬 Contact</a>
-            </nav>
-            <div class="auth-links">
-                <a class="btn light" href="/login">Log in</a>
-                <a class="btn" href="/signup">Sign up</a>
-            </div>
-            <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
-        </header>
-        <main>
-            <section class="page-intro blog-intro">
-                <span class="eyebrow">Dossier Career Blog</span>
-                <h1>Practical advice for your next move.</h1>
-                <p class="muted">Free guides, real examples, interview preparation, and job-search ideas to help you get noticed and hired faster.</p>
-            </section>
-            <div class="blog-toolbar">
-                <div class="blog-filters">
-                    <button class="filter active" data-filter="all">All Articles</button>
-                    <button class="filter" data-filter="resume">Resume &amp; CV</button>
-                    <button class="filter" data-filter="career">Career Advice</button>
-                    <button class="filter" data-filter="interview">Job Interviews</button>
-                    <button class="filter" data-filter="examples">Examples</button>
-                </div>
-                <span class="blog-count" id="blogCount">Showing 1 - 9 articles</span>
-            </div>
-            <section class="blog-grid" id="blogGrid">
-                <article class="blog-card" data-category="resume">
-                    <span class="blog-category">Resume &amp; CV Writing Tips</span>
-                    <h2>150+ Technical Skills to Put on Your Resume in 2026</h2>
-                    <p>Technical skills across 17 fields, from Epic and CAD to GA4 and Python, with honest skill tiers.</p>
-                    <div class("blog-meta")>Andrei Kurtuy · Updated on 08/24/2026</div>
-                    <a class("read-link") href="#">Read article <span>→</span></a>
-                </article>
-                <article class("blog-card") data-category("resume")}>
-                    <span class("blog-category")>Resume &amp; CV Writing Tips</span>
-                    <h2>145+ Hard Skills for Your Resume in 2026</h2>
-                    <p>How hard skills differ from soft skills, proof formulas, and how ATS keyword matching works.</p>
-                    <div class("blog-meta")>Andrei Kurtuy · Updated on 08/20/2026</div>
-                    <a class("read-link") href="#">Read article <span>→</span></a>
-                </article>
-                [Rest of the articles remain the same]
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Career Blog — Free Resume & Job Search Guides | Dossier</title>
+  <meta name="description" content="Free career advice, resume writing tips, interview preparation guides, and cover letter examples. Updated for 2026 job seekers.">
+  <meta name="keywords" content="resume tips, career advice, interview preparation, cover letter examples, ATS resume, job search guide, CV writing">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://dossier.app/career-blog">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Career Blog — Free Resume & Job Search Guides | Dossier">
+  <meta property="og:description" content="Free career advice, resume writing tips, interview preparation guides, and cover letter examples.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dossier.app/career-blog">
+
+  <!-- Schema.org Blog -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Dossier Career Blog",
+    "description": "Free career advice, resume writing tips, and job search guides.",
+    "url": "https://dossier.app/career-blog",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Dossier",
+      "url": "https://dossier.app"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-page="blog">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');}</script>
+
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <nav class="nav">
+    <a data-page="home" href="/">🏠 Dashboard</a>
+    <div class="nav-dropdown">
+      <button class="nav-drop-btn">🧰 Products &#9660;</button>
+      <div class="nav-drop-menu">
+        <a href="/builder"><span class="drop-icon">📄</span><span><strong>Resume Builder</strong><small>Build a job-winning resume</small></span></a>
+        <a href="/cv-builder"><span class="drop-icon">📋</span><span><strong>CV Builder</strong><small>Create a professional CV</small></span></a>
+        <a href="/cover-letter"><span class="drop-icon">✉️</span><span><strong>Cover Letter Builder</strong><small>Write a compelling cover letter</small></span></a>
+      </div>
+    </div>
+    <a data-page="plans" href="/plans">💳 Plans</a>
+    <a data-page="about" href="/about">💡 About us</a>
+    <a data-page="blog" href="/career-blog">📰 Career Blog</a>
+    <a data-page="contact" href="/contact">📬 Contact</a>
+  </nav>
+  <div class="auth-links">
+    <a class="btn light" href="/login">Log in</a>
+    <a class="btn" href="/signup">Sign up</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main>
+  <section class="page-intro blog-intro">
+    <span class="eyebrow">Dossier Career Blog</span>
+    <h1>Practical advice for your next move.</h1>
+    <p class="muted">Free guides, real examples, interview preparation, and job-search ideas to help you get noticed and hired faster.</p>
+  </section>
+
+  <!-- Featured Articles -->
+  <section class="blog-featured">
+    <span class="eyebrow">Featured this week</span>
+    <div class="blog-featured-grid">
+      <article class="blog-featured-card">
+        <span class="blog-category">Resume &amp; CV Writing Tips</span>
+        <h2>How to Write a Resume That Gets Past ATS in 2026</h2>
+        <p>Applicant Tracking Systems reject over 75% of resumes before a human sees them. Here's exactly how to format, keyword-optimise, and structure your resume to pass every filter.</p>
+        <div class="blog-meta">Dossier Editorial · 12 min read · Updated Jan 2026</div>
+        <a class="read-link" href="https://www.google.com/search?q=how+to+write+ATS+resume+2026" target="_blank" rel="noopener">Read guide <span>→</span></a>
+      </article>
+      <article class="blog-featured-card">
+        <span class="blog-category">Job Interviews</span>
+        <h2>50 Most Common Interview Questions (With Answers)</h2>
+        <p>From "Tell me about yourself" to behavioural questions — complete answers using the STAR method, with examples for every experience level.</p>
+        <div class="blog-meta">Dossier Editorial · 18 min read · Updated Jan 2026</div>
+        <a class="read-link" href="https://www.google.com/search?q=most+common+interview+questions+answers+2026" target="_blank" rel="noopener">Read guide <span>→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Filter toolbar -->
+  <div class="blog-toolbar">
+    <div class="blog-filters">
+      <button class="filter active" data-filter="all">All Articles</button>
+      <button class="filter" data-filter="resume">Resume &amp; CV</button>
+      <button class="filter" data-filter="career">Career Advice</button>
+      <button class="filter" data-filter="interview">Job Interviews</button>
+      <button class="filter" data-filter="examples">Examples</button>
+    </div>
+    <span class="blog-count" id="blogCount"></span>
+  </div>
+
+  <section class="blog-grid" id="blogGrid"></section>
+
+  <!-- WhatsApp CTA -->
+  <section class="whatsapp-cta">
+    <div class="whatsapp-cta-inner">
+      <div class="whatsapp-icon">💬</div>
+      <div>
+        <h3>Get free career advice on WhatsApp</h3>
+        <p>Send us your resume questions, get personalised tips, and stay updated with weekly job search advice — directly on WhatsApp.</p>
+      </div>
+      <a class="btn-whatsapp" href="https://wa.me/919999999999?text=Hi%20Dossier!%20I%20need%20help%20with%20my%20resume." target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -308,6 +308,141 @@
   .suggestions h4{ margin:0 0 10px 0; font-family:var(--mono); font-size:11.5px; letter-spacing:0.04em; }
   .suggestions ul{ margin:0; padding-left:18px; font-size:13px; line-height:1.7; }
 
+  /* ---------- ATS Score Panel ---------- */
+  .ats-panel{
+    background:rgba(255,255,255,.9);
+    border:1px solid #e2eaf1;
+    border-radius:14px;
+    box-shadow:0 8px 24px #516b800d;
+    padding:20px 22px;
+    margin-bottom:18px;
+  }
+  .ats-panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .ats-panel-title{
+    font-family:var(--serif);
+    font-size:15px;
+    font-weight:700;
+    color:#34465c;
+  }
+  .ats-grade-badge{
+    font-family:var(--mono);
+    font-size:22px;
+    font-weight:700;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .ats-grade-badge.grade-a{background:#d1fae5;color:#065f46;}
+  .ats-grade-badge.grade-b{background:#dbeafe;color:#1e40af;}
+  .ats-grade-badge.grade-c{background:#fef9c3;color:#854d0e;}
+  .ats-grade-badge.grade-d{background:#fee2e2;color:#991b1b;}
+  .ats-score-bar-wrap{
+    background:#f1f5f9;
+    border-radius:6px;
+    height:8px;
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .ats-score-bar{
+    height:100%;
+    border-radius:6px;
+    transition:width .5s ease;
+  }
+  .ats-score-bar.grade-a{background:#10b981;}
+  .ats-score-bar.grade-b{background:#3b82f6;}
+  .ats-score-bar.grade-c{background:#f59e0b;}
+  .ats-score-bar.grade-d{background:#ef4444;}
+  .ats-checks{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+  }
+  .ats-check{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:12.5px;
+    line-height:1.45;
+  }
+  .ats-check-icon{flex-shrink:0;font-size:13px;margin-top:1px;}
+  .ats-check-text{color:#374151;}
+  .ats-check-text strong{color:#1e293b;}
+  .ats-check.pass .ats-check-text{color:#6b7280;}
+  .ats-score-label{
+    font-family:var(--mono);
+    font-size:11px;
+    color:#617087;
+    margin-bottom:10px;
+  }
+  .builder-dark .ats-panel{background:rgba(26,18,40,.92);border-color:#2e2040;}
+  .builder-dark .ats-panel-title{color:#e2d9f3;}
+  .builder-dark .ats-check-text{color:#c4b8d8;}
+  .builder-dark .ats-check.pass .ats-check-text{color:#7c6fa0;}
+  .builder-dark .ats-score-bar-wrap{background:#2e2040;}
+  .builder-dark .ats-check-text strong{color:#e2d9f3;}
+  .builder-dark .ats-score-label{color:#a89bc2;}
+
+  /* ---------- Onboarding overlay ---------- */
+  .onboard-overlay{
+    position:fixed;inset:0;
+    background:rgba(15,10,26,.72);
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .onboard-overlay[hidden]{display:none;}
+  .onboard-card{
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 24px 60px #00000040;
+    padding:36px 40px;
+    max-width:520px;
+    width:100%;
+  }
+  .onboard-card h2{font-family:var(--serif);font-size:22px;color:#34465c;margin:0 0 6px;}
+  .onboard-card p{font-size:14px;color:#617087;margin:0 0 22px;line-height:1.6;}
+  .onboard-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;}
+  .onboard-step{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 14px;border-radius:10px;
+    background:#f8fafc;border:1.5px solid #e2eaf1;
+    font-size:13.5px;color:#374151;
+    cursor:pointer;transition:border-color .2s,background .2s;
+  }
+  .onboard-step:hover{border-color:#42d9bf;background:#eefbf8;}
+  .onboard-step-num{
+    width:28px;height:28px;border-radius:50%;
+    background:#42d9bf;color:#123c48;
+    font-weight:700;font-size:13px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .onboard-step-done .onboard-step-num{background:#10b981;color:#fff;}
+  .onboard-step-done{border-color:#d1fae5;background:#f0fdf4;}
+  .onboard-dismiss{
+    width:100%;padding:13px;
+    background:#27364b;color:#fff;
+    border:none;border-radius:30px;
+    font-size:14px;font-weight:600;cursor:pointer;
+  }
+  .onboard-dismiss:hover{opacity:.88;}
+  .onboard-skip{
+    display:block;text-align:center;margin-top:12px;
+    font-size:12.5px;color:#94a3b8;
+    cursor:pointer;background:none;border:none;width:100%;
+  }
+  .onboard-skip:hover{color:#64748b;}
+
   /* ---------- Library ---------- */
   .lib-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
   @media (max-width:800px){ .lib-grid{ grid-template-columns:1fr; } }
@@ -636,6 +771,15 @@
           <button class="btn small secondary no-print" id="resumeDocxBtn">Download DOCX</button>
           <button class="btn small secondary no-print" id="resumePdfBtn">Download PDF</button>
         </div>
+        <div class="ats-panel no-print" id="atsSidePanel">
+          <div class="ats-panel-head">
+            <div class="ats-panel-title">&#127919; ATS Score</div>
+            <div class="ats-grade-badge grade-d" id="atsGradeBadge">D</div>
+          </div>
+          <div class="ats-score-label" id="atsScoreLabel">0 / 100 &mdash; Fill in your resume to improve your score</div>
+          <div class="ats-score-bar-wrap"><div class="ats-score-bar grade-d" id="atsScoreBar" style="width:0%"></div></div>
+          <div class="ats-checks" id="atsChecks"></div>
+        </div>
         <div class="preview-wrap">
           <div class="sheet" id="sheet"></div>
         </div>
@@ -703,6 +847,38 @@
 </main>
 
 <div class="toast" id="toast"></div>
+
+<!-- Onboarding overlay -->
+<div class="onboard-overlay" id="onboardOverlay" hidden>
+  <div class="onboard-card">
+    <h2>&#128075; Welcome to Dossier!</h2>
+    <p>Build your first resume in minutes. Follow these steps to reach an ATS score of 80+.</p>
+    <div class="onboard-steps">
+      <div class="onboard-step" data-step="contact" id="ostep-contact">
+        <div class="onboard-step-num">1</div>
+        <div><strong>Add your contact details</strong> &mdash; name, email, phone, location</div>
+      </div>
+      <div class="onboard-step" data-step="summary" id="ostep-summary">
+        <div class="onboard-step-num">2</div>
+        <div><strong>Write a 2&ndash;3 sentence summary</strong> &mdash; your target role and top result</div>
+      </div>
+      <div class="onboard-step" data-step="experience" id="ostep-experience">
+        <div class="onboard-step-num">3</div>
+        <div><strong>Add at least one experience</strong> &mdash; role, company, and bullet points</div>
+      </div>
+      <div class="onboard-step" data-step="skills" id="ostep-skills">
+        <div class="onboard-step-num">4</div>
+        <div><strong>Add 5+ skills</strong> &mdash; tools, languages, frameworks you know</div>
+      </div>
+      <div class="onboard-step" data-step="education" id="ostep-education">
+        <div class="onboard-step-num">5</div>
+        <div><strong>Add your education</strong> &mdash; degree, school, dates</div>
+      </div>
+    </div>
+    <button class="onboard-dismiss" id="onboardStart">Start building &rarr;</button>
+    <button class="onboard-skip" id="onboardSkip">I'll figure it out myself</button>
+  </div>
+</div>
 
 </div>
 
@@ -1483,8 +1659,189 @@ async function renderLibrary(){
   });
 }
 
+/* ============================= ATS SCORE PANEL ============================= */
+function computeAtsScore(){
+  const c = resume.contact;
+  const checks = [];
+
+  // 1. Contact (20 pts)
+  const contactFields = [c.name, c.email, c.phone, c.location].filter(Boolean).length;
+  const contactScore = Math.round(contactFields / 4 * 20);
+  const missingContact = [!c.name&&'name',!c.email&&'email',!c.phone&&'phone',!c.location&&'location'].filter(Boolean);
+  checks.push({
+    id:'contact', pts:contactScore, max:20,
+    pass: contactScore >= 15,
+    label:'Contact details',
+    tip: contactScore >= 20 ? 'Name, email, phone & location complete.' :
+         missingContact.length ? 'Add your ' + missingContact.join(', ') + '.' :
+         'Add your contact details.'
+  });
+
+  // 2. Summary (15 pts)
+  const summaryWords = (resume.summary||'').trim().split(/\s+/).filter(Boolean).length;
+  const summaryScore = summaryWords >= 30 ? 15 : summaryWords >= 15 ? 10 : summaryWords >= 5 ? 5 : 0;
+  checks.push({
+    id:'summary', pts:summaryScore, max:15,
+    pass: summaryScore >= 10,
+    label:'Professional summary',
+    tip: summaryScore >= 15 ? 'Strong summary — good length.' :
+         summaryWords === 0 ? 'Write a 2-3 sentence summary naming your target role and a key result.' :
+         'Expand your summary to at least 30 words.'
+  });
+
+  // 3. Experience (25 pts)
+  const expCount = resume.experience.length;
+  const bulletCount = resume.experience.reduce((n,e)=>(e.bullets||'').split('\n').filter(l=>l.trim()).length + n, 0);
+  const ACTION_RE = /\b(built|created|delivered|designed|developed|improved|increased|led|launched|reduced|managed|optimized|architected|automated|deployed|scaled|drove|achieved|generated|saved|streamlined)\b/i;
+  const hasAction = resume.experience.some(e=>ACTION_RE.test(e.bullets||''));
+  const hasMetric = resume.experience.some(e=>/\d+[%x$k]?/.test(e.bullets||''));
+  let expScore = 0;
+  if(expCount >= 1) expScore += 10;
+  if(expCount >= 2) expScore += 5;
+  if(bulletCount >= 3) expScore += 5;
+  if(hasAction) expScore += 3;
+  if(hasMetric) expScore += 2;
+  expScore = Math.min(expScore, 25);
+  checks.push({
+    id:'experience', pts:expScore, max:25,
+    pass: expScore >= 15,
+    label:'Work experience',
+    tip: expScore >= 22 ? 'Great experience section with strong bullets.' :
+         expCount === 0 ? 'Add at least one work experience entry.' :
+         !hasAction ? 'Start bullets with action verbs (built, led, improved...).' :
+         !hasMetric ? 'Add a number or metric to at least one bullet (e.g. reduced load time by 40%).' :
+         'Add more bullet points to strengthen your experience.'
+  });
+
+  // 4. Skills (20 pts)
+  const skillCount = resume.skills.length;
+  const skillScore = skillCount >= 8 ? 20 : skillCount >= 5 ? 14 : skillCount >= 3 ? 8 : skillCount >= 1 ? 4 : 0;
+  checks.push({
+    id:'skills', pts:skillScore, max:20,
+    pass: skillScore >= 14,
+    label:'Skills section',
+    tip: skillScore >= 20 ? skillCount + ' skills listed — well done.' :
+         skillCount === 0 ? 'Add skills — tools, languages, and frameworks you know.' :
+         'Add more skills (you have ' + skillCount + ', aim for 8+).'
+  });
+
+  // 5. Education (10 pts)
+  const eduScore = resume.education.length >= 1 ? 10 : 0;
+  checks.push({
+    id:'education', pts:eduScore, max:10,
+    pass: eduScore >= 10,
+    label:'Education',
+    tip: eduScore >= 10 ? 'Education section present.' : 'Add your highest qualification.'
+  });
+
+  // 6. Profile links (10 pts)
+  const hasLinks = (c.links||'').trim().length > 0;
+  const hasLabel = (resume.label||'').trim() !== 'Untitled resume' && (resume.label||'').trim().length > 0;
+  const miscScore = (hasLinks ? 7 : 0) + (hasLabel ? 3 : 0);
+  checks.push({
+    id:'misc', pts:miscScore, max:10,
+    pass: miscScore >= 5,
+    label:'Profile links & label',
+    tip: hasLinks ? 'LinkedIn / GitHub links present.' : 'Add a LinkedIn or GitHub URL to the Links field.'
+  });
+
+  const total = checks.reduce((n,ch)=>n+ch.pts, 0);
+  return { score: total, checks };
+}
+
+function gradeFromScore(s){ return s>=80?'A':s>=60?'B':s>=40?'C':'D'; }
+
+function renderAtsPanel(){
+  const { score, checks } = computeAtsScore();
+  const grade = gradeFromScore(score);
+  const cls = 'grade-' + grade.toLowerCase();
+
+  const badge = document.getElementById('atsGradeBadge');
+  badge.textContent = grade;
+  badge.className = 'ats-grade-badge ' + cls;
+
+  const bar = document.getElementById('atsScoreBar');
+  bar.style.width = score + '%';
+  bar.className = 'ats-score-bar ' + cls;
+
+  const labels = { A:'Great ATS readiness!', B:'Good — a few improvements left', C:'Fair — keep filling in sections', D:'Getting started — fill in each section' };
+  document.getElementById('atsScoreLabel').textContent = score + ' / 100 — ' + labels[grade];
+
+  document.getElementById('atsChecks').innerHTML = checks.map(ch=>{
+    const icon = ch.pass ? '\u2705' : '\u26a0\ufe0f';
+    return '<div class="ats-check ' + (ch.pass?'pass':'fail') + '">'
+      + '<span class="ats-check-icon">' + icon + '</span>'
+      + '<span class="ats-check-text"><strong>' + ch.label + '</strong> \u2014 ' + escHtml(ch.tip) + '</span>'
+      + '</div>';
+  }).join('');
+
+  updateOnboardSteps();
+}
+
+/* ============================= ONBOARDING ============================= */
+function updateOnboardSteps(){
+  const c = resume.contact;
+  const done = {
+    contact: !!(c.name && c.email),
+    summary: (resume.summary||'').trim().split(/\s+/).filter(Boolean).length >= 10,
+    experience: resume.experience.length >= 1,
+    skills: resume.skills.length >= 5,
+    education: resume.education.length >= 1
+  };
+  const keys = Object.keys(done);
+  keys.forEach((key, idx)=>{
+    const el = document.getElementById('ostep-' + key);
+    if(!el) return;
+    if(done[key]){
+      el.classList.add('onboard-step-done');
+      el.querySelector('.onboard-step-num').textContent = '\u2713';
+    } else {
+      el.classList.remove('onboard-step-done');
+      el.querySelector('.onboard-step-num').textContent = idx + 1;
+    }
+  });
+}
+
+async function maybeShowOnboarding(){
+  if(localStorage.getItem('dossier:onboard-dismissed')) return;
+  const resumes = await listResumes();
+  if(resumes.length > 0) return;
+  document.getElementById('onboardOverlay').removeAttribute('hidden');
+}
+
+function dismissOnboarding(){
+  localStorage.setItem('dossier:onboard-dismissed', '1');
+  document.getElementById('onboardOverlay').setAttribute('hidden', '');
+}
+
+document.getElementById('onboardStart').addEventListener('click', ()=>{
+  dismissOnboarding();
+  document.getElementById('f-name').focus();
+});
+document.getElementById('onboardSkip').addEventListener('click', dismissOnboarding);
+
+document.querySelectorAll('.onboard-step[data-step]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    dismissOnboarding();
+    const targets = { contact:'f-name', summary:'f-summary', experience:'addExp', skills:'f-skillInput', education:'addEdu' };
+    const target = document.getElementById(targets[el.dataset.step]);
+    if(target){ target.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>target.focus(),400); }
+  });
+});
+
 /* ============================= INIT ============================= */
-loadUser();
+// Patch renderPreview to also refresh ATS panel on every keystroke
+const _origRenderPreview = renderPreview;
+function renderPreview(){
+  _origRenderPreview();
+  renderAtsPanel();
+}
+
+(async function init(){
+  await loadUser();
+  renderAtsPanel();
+  await maybeShowOnboarding();
+})();
 </script>
 </body>
 </html>

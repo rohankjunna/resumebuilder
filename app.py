@@ -2,7 +2,11 @@ import os
 import re
 import sqlite3
 import threading
+import secrets
+import time
 from markupsafe import escape
+from dotenv import load_dotenv
+load_dotenv(override=True)
 from io import BytesIO
 from functools import wraps
  
@@ -74,6 +78,46 @@ def database_connection():
     return connection
  
  
+# ── Twilio OTP ──────────────────────────────────────────────────────────────
+
+FAST2SMS_API_KEY = os.environ.get("FAST2SMS_API_KEY", "")
+
+# In-memory OTP store: {email: {otp, expires_at, reset_token}}
+_otp_store: dict = {}
+
+def _send_sms(to: str, body: str) -> bool:
+    if not FAST2SMS_API_KEY:
+        return False
+    # Strip country code for Fast2SMS (expects 10-digit Indian number)
+    number = to.strip().lstrip("+")
+    if number.startswith("91") and len(number) == 12:
+        number = number[2:]
+    try:
+        import urllib.request, urllib.parse, json as _json
+        payload = urllib.parse.urlencode({
+            "authorization": FAST2SMS_API_KEY,
+            "message": body,
+            "language": "english",
+            "route": "q",
+            "numbers": number,
+        }).encode()
+        req = urllib.request.Request(
+            "https://www.fast2sms.com/dev/bulkV2",
+            data=payload,
+            headers={"Cache-Control": "no-cache"},
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = _json.loads(resp.read())
+            if result.get("return") is True:
+                return True
+            print(f"FAST2SMS ERROR: {result}", flush=True)
+            return False
+    except Exception as e:
+        print(f"SMS ERROR: {e}", flush=True)
+        return False
+
+
 # ── Admin credentials ───────────────────────────────────────────────────────
  
 ADMIN_EMAIL = os.environ.get(
@@ -85,6 +129,8 @@ ADMIN_PASSWORD = os.environ.get(
     "ADMIN_PASSWORD",
     "change-admin-password"
 )
+
+print(f"[DEBUG] ADMIN_EMAIL={ADMIN_EMAIL!r}", flush=True)
  
  
 def initialize_database():
@@ -514,7 +560,7 @@ def career_blog():
 @app.get("/cv-builder")
 def cv_builder():
  
-    if "user_id" not in session:
+    if "user_id" not in session and not session.get("is_admin"):
  
         from flask import redirect
  
@@ -551,7 +597,7 @@ def signup_page():
 @app.get("/cover-letter")
 def cover_letter():
  
-    if "user_id" not in session:
+    if "user_id" not in session and not session.get("is_admin"):
  
         from flask import redirect
  
@@ -1544,6 +1590,112 @@ def ats_analyze():
     )
  
  
+@app.get("/forgot-password")
+def forgot_password_page():
+    return page("forgot-password.html")
+
+
+@app.post("/api/forgot-password/send-otp")
+def forgot_send_otp():
+
+    data  = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        return jsonify(error="Enter a valid email address."), 400
+
+    with database_connection() as conn:
+        user = conn.execute(
+            "SELECT phone FROM users WHERE email=?", (email,)
+        ).fetchone()
+
+    if not user:
+        # Don't reveal whether email exists
+        return jsonify(error="No account found with that email."), 404
+
+    phone = user["phone"]
+    if not phone:
+        return jsonify(error="No phone number on this account. Contact support."), 400
+
+    otp = str(secrets.randbelow(900000) + 100000)  # 6-digit
+    _otp_store[email] = {
+        "otp": otp,
+        "expires_at": time.time() + 600,  # 10 minutes
+        "reset_token": None
+    }
+
+    sent = _send_sms(
+        phone,
+        f"Your Dossier password reset OTP is: {otp}. Valid for 10 minutes."
+    )
+
+    if not sent:
+        # Fallback: print to console for dev/testing
+        print(f"[OTP] {email} → {otp}", flush=True)
+
+    # Mask phone: show last 3 digits only
+    masked = "*" * (len(phone) - 3) + phone[-3:]
+
+    return jsonify(ok=True, phone_hint=masked)
+
+
+@app.post("/api/forgot-password/verify-otp")
+def forgot_verify_otp():
+
+    data  = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+    otp   = str(data.get("otp", "")).strip()
+
+    record = _otp_store.get(email)
+
+    if not record:
+        return jsonify(error="Request a new OTP first."), 400
+
+    if time.time() > record["expires_at"]:
+        _otp_store.pop(email, None)
+        return jsonify(error="OTP has expired. Please request a new one."), 400
+
+    if record["otp"] != otp:
+        return jsonify(error="Incorrect OTP. Please try again."), 401
+
+    reset_token = secrets.token_urlsafe(32)
+    record["reset_token"] = reset_token
+    record["expires_at"]  = time.time() + 300  # 5 more minutes to reset
+
+    return jsonify(ok=True, reset_token=reset_token)
+
+
+@app.post("/api/forgot-password/reset")
+def forgot_reset_password():
+
+    data         = request.get_json(silent=True) or {}
+    email        = str(data.get("email", "")).strip().lower()
+    reset_token  = str(data.get("reset_token", "")).strip()
+    new_password = str(data.get("new_password", ""))
+
+    if len(new_password) < 8:
+        return jsonify(error="Password must be at least 8 characters."), 400
+
+    record = _otp_store.get(email)
+
+    if not record or record.get("reset_token") != reset_token:
+        return jsonify(error="Invalid or expired reset session."), 401
+
+    if time.time() > record["expires_at"]:
+        _otp_store.pop(email, None)
+        return jsonify(error="Reset session expired. Please start again."), 400
+
+    with database_connection() as conn:
+        conn.execute(
+            "UPDATE users SET password_hash=? WHERE email=?",
+            (generate_password_hash(new_password), email)
+        )
+
+    _otp_store.pop(email, None)
+
+    return jsonify(ok=True)
+
+
 # ── Admin login ─────────────────────────────────────────────────────────────
  
 @app.get("/admin/login")
@@ -1574,6 +1726,9 @@ def admin_login():
         data.get("password", "")
     )
  
+    print(f"[LOGIN] received email={email!r}", flush=True)
+    print(f"[LOGIN] expected email={ADMIN_EMAIL.lower()!r}", flush=True)
+
     if (
         email != ADMIN_EMAIL.lower()
         or password != ADMIN_PASSWORD

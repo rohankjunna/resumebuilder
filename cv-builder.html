@@ -1,40 +1,224 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>CV Builder | Dossier</title>
-        <link rel="stylesheet" href="/static/styles.css">
-    </head>
-    <body data-page="cv-builder">
-        <script>
-            if(localStorage.getItem('theme')==='dark') {
-                document.body.classList.add('dark');
-            }
-        </script>
-        <script>
-            fetch('/api/me').then(r=>r.json()).then(d=>{
-                if(!d.user) {
-                    window.location.href='/login';
-                }
-            });
-        </script>
-        <header class="topbar">
-            <a class="brand" href="/">Dossier <small>resume workshop</small></a>
-            <nav class="nav">
-                <a href="/builder">📄 Resume Builder</a>
-                <a data-page="cv-builder" href="/cv-builder">📋 CV Builder</a>
-                <a href="/cover-letter">✉️ Cover Letter</a>
-                <a href="/career-blog">📰 Career Blog</a>
-                <a href="/about">💡 About us</a>
-                <a href="/contact">📬 Contact</a>
-            </nav>
-            <div class="auth-links">
-                <a class="btn light" href="/login">Log in</a>
-                <a class="btn" href="/signup">Sign up</a>
-            </div>
-            <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
-        </header>
-function cvPayload(){return {name:document.getElementById('cvName').value,role:document.getElementById('cvRole').value,email:document.getElementById('cvEmail').value,location:document.getElementById('cvLocation').value,profile:document.getElementById('cvProfile').value,experience:document.getElementById('cvExperience').value,education:document.getElementById('cvEducation').value,skills:document.getElementById('cvSkills').value,languages:document.getElementById('cvLanguages').value};}
-document.getElementById('cvDocx').addEventListener('click',async()=>{try{await downloadDocument('cv','docx',cvPayload());}catch(error){alert(error.message);}});document.getElementById('cvPdf').addEventListener('click',async()=>{try{await downloadDocument('cv','pdf',cvPayload());}catch(error){alert(error.message);}});refreshCvPreview();
-</script></body></html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CV Builder | Dossier</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body data-page="cv-builder">
+<script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.documentElement.style.background='#0f0a1a';}</script>
+<script>fetch('/api/me').then(r=>r.json()).then(d=>{if(!d.user)window.location.href='/login';});</script>
+
+<header class="topbar">
+  <a class="brand" href="/">Dossier <small>resume workshop</small></a>
+  <nav class="nav">
+    <a href="/builder">📄 Resume Builder</a>
+    <a data-page="cv-builder" href="/cv-builder">📋 CV Builder</a>
+    <a href="/cover-letter">✉️ Cover Letter</a>
+    <a href="/career-blog">📰 Career Blog</a>
+    <a href="/about">💡 About us</a>
+    <a href="/contact">📬 Contact</a>
+  </nav>
+  <div class="auth-links">
+    <a class="btn light" href="/login">Log in</a>
+    <a class="btn" href="/signup">Sign up</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main class="cv-main">
+  <div class="cv-heading">
+    <div>
+      <span class="eyebrow">Dossier CV Builder</span>
+      <h1>Build a CV that tells your full story.</h1>
+      <p class="muted">Fill in your details and get a polished, print-ready CV in seconds.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn light" id="cvDocx">Download DOCX</button>
+      <button class="btn green" id="cvPdf">Download PDF</button>
+    </div>
+  </div>
+
+  <div class="cv-layout">
+
+    <!-- FORM -->
+    <section class="cv-form">
+
+      <div class="cv-card">
+        <h2>Personal details</h2>
+        <div class="cv-row">
+          <div class="field"><label>FULL NAME</label><input id="cvName" placeholder="Alex Morgan"></div>
+          <div class="field"><label>PROFESSIONAL ROLE</label><input id="cvRole" placeholder="Senior Software Engineer"></div>
+        </div>
+        <div class="cv-row">
+          <div class="field"><label>EMAIL</label><input id="cvEmail" type="email" placeholder="alex@email.com"></div>
+          <div class="field"><label>LOCATION</label><input id="cvLocation" placeholder="London, UK"></div>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Profile summary</h2>
+        <div class="field">
+          <label>PROFESSIONAL SUMMARY</label>
+          <textarea id="cvProfile" placeholder="A results-driven software engineer with 8+ years of experience building scalable web applications. Passionate about clean code, team collaboration, and delivering impactful products."></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Experience</h2>
+        <div class="field">
+          <label>WORK HISTORY</label>
+          <textarea id="cvExperience" placeholder="Senior Engineer — TechCorp (2020–Present)&#10;Led a team of 5 engineers to redesign the core API, reducing latency by 40%.&#10;&#10;Engineer — StartupXYZ (2017–2020)&#10;Built the initial product from scratch, scaling to 50k users."></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Education</h2>
+        <div class="field">
+          <label>ACADEMIC BACKGROUND</label>
+          <textarea id="cvEducation" placeholder="BSc Computer Science — University of London (2013–2017)&#10;First Class Honours"></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Skills</h2>
+        <div class="field">
+          <label>KEY SKILLS</label>
+          <textarea id="cvSkills" placeholder="Python, JavaScript, React, Node.js, PostgreSQL, Docker, AWS, Agile"></textarea>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <h2>Languages</h2>
+        <div class="field">
+          <label>LANGUAGES SPOKEN</label>
+          <textarea id="cvLanguages" placeholder="English (Native), Spanish (Conversational)"></textarea>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- LIVE PREVIEW -->
+    <section class="cv-preview-wrap">
+      <div class="cv-preview" id="cvPreview">
+
+        <div class="cv-pre-header">
+          <p id="pvName" class="cv-pre-name">Alex Morgan</p>
+          <p id="pvRole" class="cv-pre-role">Senior Software Engineer</p>
+          <p id="pvContact" class="cv-pre-contact">alex@email.com &nbsp;·&nbsp; London, UK</p>
+        </div>
+
+        <div class="cv-pre-section">
+          <h3>Profile</h3>
+          <p id="pvProfile">A results-driven software engineer with 8+ years of experience building scalable web applications.</p>
+        </div>
+
+        <div class="cv-pre-section">
+          <h3>Experience</h3>
+          <p id="pvExperience" style="white-space:pre-line">Senior Engineer — TechCorp (2020–Present)</p>
+        </div>
+
+        <div class="cv-pre-section">
+          <h3>Education</h3>
+          <p id="pvEducation" style="white-space:pre-line">BSc Computer Science — University of London (2013–2017)</p>
+        </div>
+
+        <div class="cv-pre-section">
+          <h3>Skills</h3>
+          <p id="pvSkills">Python, JavaScript, React, Node.js, PostgreSQL, Docker, AWS, Agile</p>
+        </div>
+
+        <div class="cv-pre-section">
+          <h3>Languages</h3>
+          <p id="pvLanguages">English (Native), Spanish (Conversational)</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="/static/app.js"></script>
+<script>
+const cvMap = {
+  cvName:       v => { _t('pvName', v||'Your Name'); },
+  cvRole:       v => _t('pvRole', v||''),
+  cvEmail:      v => refreshCvContact(),
+  cvLocation:   v => refreshCvContact(),
+  cvProfile:    v => _t('pvProfile', v||''),
+  cvExperience: v => _t('pvExperience', v||''),
+  cvEducation:  v => _t('pvEducation', v||''),
+  cvSkills:     v => _t('pvSkills', v||''),
+  cvLanguages:  v => _t('pvLanguages', v||''),
+};
+
+function _t(id, val){ const el = document.getElementById(id); if(el) el.textContent = val; }
+
+function refreshCvContact(){
+  const parts = [
+    document.getElementById('cvEmail').value,
+    document.getElementById('cvLocation').value,
+  ].filter(Boolean);
+  document.getElementById('pvContact').textContent = parts.join('  ·  ') || 'email · location';
+}
+
+Object.keys(cvMap).forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', e => cvMap[id](e.target.value));
+});
+
+function cvPayload(){
+  return {
+    name:       document.getElementById('cvName').value,
+    role:       document.getElementById('cvRole').value,
+    email:      document.getElementById('cvEmail').value,
+    location:   document.getElementById('cvLocation').value,
+    profile:    document.getElementById('cvProfile').value,
+    experience: document.getElementById('cvExperience').value,
+    education:  document.getElementById('cvEducation').value,
+    skills:     document.getElementById('cvSkills').value,
+    languages:  document.getElementById('cvLanguages').value,
+  };
+}
+
+async function dlCV(fmt){
+  try{
+    const res = await fetch(`/api/download/cv/${fmt}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(cvPayload())
+    });
+    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.error||'Download failed.'); }
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `dossier-cv.${fmt}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }catch(e){ alert(e.message); }
+}
+
+document.getElementById('cvDocx').addEventListener('click', ()=>dlCV('docx'));
+document.getElementById('cvPdf').addEventListener('click',  ()=>dlCV('pdf'));
+</script>
+
+<style>
+.cv-pre-header{ border-bottom:2px solid var(--green,#42d9bf); padding-bottom:16px; margin-bottom:20px; }
+.cv-pre-name{ font-size:22px; font-weight:700; color:#34465c; margin:0 0 4px; font-family:var(--serif,'Trebuchet MS',sans-serif); }
+.cv-pre-role{ font-size:14px; color:#617087; margin:0 0 4px; }
+.cv-pre-contact{ font-size:12px; color:#617087; margin:0; }
+.cv-pre-section{ margin-bottom:18px; }
+.cv-pre-section h3{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--green-dark,#1d9f98); margin:0 0 6px; font-family:monospace; }
+.cv-pre-section p{ font-size:13px; line-height:1.75; color:#374151; margin:0; }
+
+body.dark .cv-pre-name{ color:#e2d9f3; }
+body.dark .cv-pre-role{ color:#a89bc2; }
+body.dark .cv-pre-contact{ color:#a89bc2; }
+body.dark .cv-pre-section p{ color:#c4b8d8; }
+body.dark .cv-pre-header{ border-bottom-color:#7c3aed; }
+</style>
+
+</body>
+</html>

@@ -34,16 +34,26 @@
   <section class="templates-hero">
     <span class="eyebrow">Free resume templates</span>
     <h1>Find a format that feels like you.</h1>
-    <p>Explore 120 clean, editable layouts designed for real applications and easy ATS scanning.</p>
+    <p>Explore 99 clean, editable layouts designed for real applications and easy ATS scanning.</p>
+
+    <div class="template-search-bar">
+      <input type="search" id="templateSearch" placeholder="Search for 'designer', 'engineer', 'fresher'…" autocomplete="off">
+    </div>
+
     <div class="template-toolbar">
-      <div class="template-filters" aria-label="Filter templates">
-        <button class="filter active" data-template-filter="all">All templates</button>
-        <button class="filter" data-template-filter="classic">Classic</button>
-        <button class="filter" data-template-filter="modern">Modern</button>
-        <button class="filter" data-template-filter="creative">Creative</button>
-        <button class="filter" data-template-filter="minimal">Minimal</button>
+      <div class="template-filters" aria-label="Filter by role">
+        <button class="filter active" data-template-filter="all">All</button>
+        <button class="filter" data-template-filter="ats">ATS only</button>
+        <button class="filter" data-template-filter="engineer">Engineer</button>
+        <button class="filter" data-template-filter="fresher">Fresher</button>
+        <button class="filter" data-template-filter="senior">Senior</button>
+        <button class="filter" data-template-filter="data">Data</button>
+        <button class="filter" data-template-filter="designer">Designer</button>
+        <button class="filter" data-template-filter="manager">Product Manager</button>
+        <button class="filter" data-template-filter="marketing">Marketing</button>
+        <button class="filter" data-template-filter="sales">Sales</button>
       </div>
-      <span class="template-count" id="templateCount">120 free templates</span>
+      <span class="template-count" id="templateCount">99 Templates</span>
     </div>
   </section>
   <section class="template-grid" id="templateGrid" aria-live="polite"></section>
